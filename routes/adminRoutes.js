@@ -4,12 +4,12 @@ const adminController = require('../controllers/adminController');
 
 const router = express.Router();
 
-// router.route('/auth/signup').post(userController.createUser);
+router.get('/auth/allorders', [authJwt.verifyToken, authJwt.isAdmin], adminController.getAllOrders);
 
-// router.route('/all').get(userController.allAccess);
+router.get('/auth/menu', [authJwt.verifyToken, authJwt.isAdmin], adminController.getMenu);
 
-// router.route('/order').post(beansController.createOrder);
+router.post('/auth/menu', [authJwt.verifyToken, authJwt.isAdmin], adminController.addToMenu);
 
-router.get('/admin', [authJwt.verifyToken], adminController.userBoard);
+router.patch('/auth/menu', [authJwt.verifyToken, authJwt.isAdmin], adminController.addToMenu);
 
 module.exports = router;
