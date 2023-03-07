@@ -22,6 +22,7 @@ exports.createOrder = async (req, res) => {
 };
 
 exports.getOrderStatus = async (req, res) => {
+  console.log();
   try {
     const order = await OrderGuest.findById(req.params.id);
     const newEta = helper.calculateNewEta(order.details.createdAt, order.details.eta);
