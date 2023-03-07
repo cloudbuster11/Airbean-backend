@@ -10,6 +10,8 @@ router.get('/auth/menu', [authJwt.verifyToken, authJwt.isAdmin], adminController
 
 router.post('/auth/menu', [authJwt.verifyToken, authJwt.isAdmin], adminController.addToMenu);
 
-router.patch('/auth/menu', [authJwt.verifyToken, authJwt.isAdmin], adminController.addToMenu);
+router.patch('/auth/menu/:id', [authJwt.verifyToken, authJwt.isAdmin], adminController.updateMenu);
+
+router.delete('/auth/menu/:id', [authJwt.verifyToken, authJwt.isAdmin], adminController.deleteProduct);
 
 module.exports = router;
