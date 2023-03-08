@@ -24,14 +24,6 @@ This Airbean API Documentation was created using different "often used" technolo
 `npm install`
 
 **Create .env file in root folder with following variables :**
-NODE_ENV=development
-PORT=8000
-DATABASE_CONNECTION=mongodb+srv://
-DATABASE=<DATABASE_CONNECTION><DATABASE_USER>:<PASSWORD><DATABASE_SERVER>
-DATABASE_SERVER=@cluster0.z58t6sq.mongodb.net/Beans?retryWrites=true&w=majority
-DATABASE_USER=admin
-DATABASE_PASSWORD=mMLnY5S6rU0RdmGh
-SECRET
 
 - `NODE_ENV`=development
 - `PORT`
