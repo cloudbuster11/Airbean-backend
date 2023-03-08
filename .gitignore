@@ -1,3 +1,8 @@
 node_modules
-.env
+config.env
 .DS_store
+
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
