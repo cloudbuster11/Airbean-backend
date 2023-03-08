@@ -1,6 +1,6 @@
-const db = require('../models');
-const OrderUser = db.orderUser;
-const Product = db.product;
+const models = require('../models');
+const OrderUser = models.orderUser;
+const Product = models.product;
 
 exports.getAllOrders = async (req, res) => {
   try {

@@ -1,6 +1,6 @@
 const helper = require('../helpers/eta');
-const db = require('../models');
-const OrderGuest = db.orderGuest;
+const models = require('../models');
+const OrderGuest = models.orderGuest;
 
 exports.createOrder = async (req, res) => {
   try {

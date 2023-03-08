@@ -1,6 +1,6 @@
 const helper = require('../helpers/eta');
-const db = require('../models');
-const OrderUser = db.orderUser;
+const models = require('../models');
+const OrderUser = models.orderUser;
 
 exports.getOrderStatus = async (req, res) => {
   try {

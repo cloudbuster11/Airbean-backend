@@ -1,5 +1,5 @@
-const db = require('../models');
-const OrderUser = db.orderUser;
+const models = require('../models');
+const OrderUser = models.orderUser;
 
 exports.createOrder = (req, res) => {
   // Använda populate för att lägga till userId i orderUser?
