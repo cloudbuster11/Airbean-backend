@@ -127,6 +127,10 @@ Mongodb connection URI:
 
 - GET All orders - /api/admin/auth/allorders
 
+  - Paging - ?limit=2&page=2
+  - Sorting - ?sort=-userId
+  - Fields - ?fields=userId
+
 - GET Menu - /api/admin/auth/menu \*Will be deleted.
 
 - POST Add product to menu - /api/admin/auth/menu
