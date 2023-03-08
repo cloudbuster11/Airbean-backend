@@ -73,7 +73,7 @@ Mongodb connection URI:
     }
     }
 
-- GET Order status Guest - /api/beans/order/status/:id
+- GET Order status Guest - /api/guest/order/status/:id
 
 - POST Sign up - /api/user/auth/signup
 
