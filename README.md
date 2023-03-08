@@ -94,7 +94,7 @@ Mongodb connection URI:
 
   ## User Routes
 
-  ### Include Header Authorization Bearer Token in following routes!
+  #### Include Header Authorization Bearer Token in following routes!
 
 - POST Order as Signed in /api/user/auth/order
 
@@ -120,7 +120,7 @@ Mongodb connection URI:
 
   ## Admin Routes
 
-  ### Include Header Authorization Bearer Token in following routes!
+  #### Include Header Authorization Bearer Token in following routes!
 
 - GET All orders /api/admin/auth/allorders
 
