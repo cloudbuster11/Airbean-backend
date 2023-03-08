@@ -87,7 +87,7 @@ exports.signin = (req, res) => {
       }
 
       const token = jwt.sign({ id: user.id }, process.env.SECRET, {
-        expiresIn: 1800, // 30min
+        expiresIn: process.env.JWTEXPIRATION, // 30min
       });
 
       const authorities = [];

@@ -32,6 +32,7 @@ This Airbean API was created for learning purposes using different "often used" 
 - `DATABASE_PASSWORD`
 - `DATABASE_SERVER`
 - `SECRET`=JWTSECRET
+- `JWTEXPIRATION`
 
 **_Example :_**
 
