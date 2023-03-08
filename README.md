@@ -92,6 +92,8 @@ Mongodb connection URI:
     "password": "password"
     }
 
+    - Returns secretToken
+
   ## User Routes
 
   #### Include Header Authorization Bearer Token in following routes!
