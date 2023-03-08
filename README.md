@@ -1,4 +1,4 @@
-# Airbean API Documentation (Node.js, MongoDB Atlas, Express, Mongoose)
+# Airbean API Documentation
 
 This Airbean API Documentation was created using different "often used" technologies for example:
 
