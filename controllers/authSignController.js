@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const dotenv = require('dotenv');
+dotenv.config({ path: '../config.env' });
 
-const config = require('../config/authConfig');
-const db = require('../models');
-const User = db.user;
-const Role = db.role;
+const models = require('../models');
+const User = models.user;
+const Role = models.role;
 
 exports.signup = (req, res) => {
   const user = new User({
@@ -12,7 +13,6 @@ exports.signup = (req, res) => {
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
   });
-  console.log(req.body.roles);
 
   user.save((err, user) => {
     console.log(err);
@@ -88,8 +88,9 @@ exports.signin = (req, res) => {
         });
       }
 
-      const token = jwt.sign({ id: user.id }, config.secret, {
-        expiresIn: 1800, // 30min
+      const token = jwt.sign({ id: user.id }, process.env.SECRET, {
+        // expiresIn: process.env.JWTEXPIRATION, // 30min
+        expiresIn: 3600, // 30min
       });
 
       const authorities = [];

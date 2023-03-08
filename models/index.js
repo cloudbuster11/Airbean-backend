@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
-const db = {};
+const models = {};
 
-db.mongoose = mongoose;
+models.mongoose = mongoose;
 
-db.user = require('./userModel');
-db.role = require('./roleModel');
-db.orderUser = require('./orderUserModel');
-db.orderGuest = require('./orderGuestModel');
-db.product = require('./productModel');
+models.user = require('./userModel');
+models.role = require('./roleModel');
+models.orderUser = require('./orderUserModel');
+models.orderGuest = require('./orderGuestModel');
+models.product = require('./productModel');
 
-db.ROLES = ['user', 'admin'];
+models.ROLES = ['user', 'admin'];
 
-module.exports = db;
+module.exports = models;

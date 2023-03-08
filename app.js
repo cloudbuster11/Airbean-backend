@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 
 app.use('/api/menu', menuRouter);
 app.use('/api/guest', guestRouter);
-app.use('/api/test', adminRouter);
+app.use('/api/admin', adminRouter);
 app.use('/api/user', authRouter);
 
 module.exports = app;

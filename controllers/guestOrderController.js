@@ -1,6 +1,7 @@
-const helper = require('../helpers/eta');
-const db = require('../models');
-const OrderGuest = db.orderGuest;
+const utils = require('../utils/');
+const calculateNewEta = utils.calculateNewEta;
+const models = require('../models');
+const OrderGuest = models.orderGuest;
 
 exports.createOrder = async (req, res) => {
   try {
@@ -22,10 +23,9 @@ exports.createOrder = async (req, res) => {
 };
 
 exports.getOrderStatus = async (req, res) => {
-  console.log();
   try {
     const order = await OrderGuest.findById(req.params.id);
-    const newEta = helper.calculateNewEta(order.details.createdAt, order.details.eta);
+    const newEta = calculateNewEta(order.details.createdAt, order.details.eta);
 
     res.status(200).json({
       status: 'success',
