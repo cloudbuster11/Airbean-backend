@@ -1,6 +1,6 @@
 # Airbean API Documentation
 
-This Airbean API was created using different "often used" technologies for example:
+This Airbean API was created for learning purposes using different "often used" technologies for example:
 
 - Node.js
 - Express
