@@ -48,53 +48,15 @@ Mongodb connection URI:
 
 `node server.js`
 
-# Api Routes
+## Api Routes
 
-## Open Routes
+### Open Routes
 
 - GET Menu - /api/menu/
 
 - POST Order as Guest - /api/guest/order
-  Body:
-  {
-  "details": {
-  "order": [
-  {
-  "name": "Bryggkaffe",
-  "price": 29
-  },
-  {
-  "name": "Kaffe Latte",
-  "price": 54
-  }
-  ]
-  }
-  }
 
-  - GET Order status Guest - /api/beans/order/status/:id
-
-  - POST Sign up - /api/user/auth/signup
-    Body:
-    {
-    "username": "username",
-    "email": "user@gmail.com",
-    "password": "password",
-    "roles": ["user", "admin"]
-    }
-
-  - POST Sign in /api/user/auth/signin
-    Body:
-    {
-    "username": "username",
-    "password": "password"
-    }
-
-  # User Routes
-
-  ## Include Header Authorization Bearer Token in following routes!
-
-  - POST Order as Signed in /api/user/auth/order
-    Body:
+  - Body:
     {
     "details": {
     "order": [
@@ -110,30 +72,74 @@ Mongodb connection URI:
     }
     }
 
-  - GET Order history /api/user/auth/orderhistory
+- GET Order status Guest - /api/beans/order/status/:id
 
-  - GET Orderstatus /api/user/auth/:id
+- POST Sign up - /api/user/auth/signup
 
-  # Admin Routes
+  - Body:
+    {
+    "username": "username",
+    "email": "user@gmail.com",
+    "password": "password",
+    "roles": ["user", "admin"]
+    }
 
-  ## Include Header Authorization Bearer Token in following routes!
+- POST Sign in /api/user/auth/signin
 
-  - GET All orders /api/admin/auth/allorders
+  - Body:
+    {
+    "username": "username",
+    "password": "password"
+    }
 
-  - GET Menu /api/admin/auth/menu \*Will be deleted.
+  ## User Routes
 
-  - POST Add product to menu /api/admin/auth/menu
-    Body:
+  ### Include Header Authorization Bearer Token in following routes!
+
+- POST Order as Signed in /api/user/auth/order
+
+  - Body:
+    {
+    "details": {
+    "order": [
+    {
+    "name": "Bryggkaffe",
+    "price": 29
+    },
+    {
+    "name": "Kaffe Latte",
+    "price": 54
+    }
+    ]
+    }
+    }
+
+- GET Order history /api/user/auth/orderhistory
+
+- GET Orderstatus /api/user/auth/:id
+
+  ## Admin Routes
+
+  ### Include Header Authorization Bearer Token in following routes!
+
+- GET All orders /api/admin/auth/allorders
+
+- GET Menu /api/admin/auth/menu \*Will be deleted.
+
+- POST Add product to menu /api/admin/auth/menu
+
+  - Body:
     {
     "title": "Espresso",
     "desc": "En enkel espresso.",
     "price": 43
     }
 
-  - PATCH Patch Product /api/admin/auth/menu/:id
-    Body:
+- PATCH Patch Product /api/admin/auth/menu/:id
+
+  - Body:
     {
     "title": "En Fluffig Semla"
     }
 
-  - DELETE Delete product from menu /api/admin/auth/menu/:id
+- DELETE Delete product from menu /api/admin/auth/menu/:id
