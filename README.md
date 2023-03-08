@@ -31,7 +31,7 @@ This Airbean API was created using different "often used" technologies for examp
 - `DATABASE_USER`
 - `DATABASE_PASSWORD`
 - `DATABASE_SERVER`
-- `SECRET`=<JWTSECRET>
+- `SECRET`=JWTSECRET
 
 **_Example :_**
 
