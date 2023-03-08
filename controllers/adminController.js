@@ -48,16 +48,16 @@ exports.addToMenu = async (req, res) => {
 
     newProduct.save((err, newProduct) => {
       if (err) {
+        console.log(err);
         res.status(200).send({ message: err });
         return;
       }
-    });
-
-    res.status(200).json({
-      status: 'success',
-      data: {
-        newProduct,
-      },
+      res.status(200).json({
+        status: 'success',
+        data: {
+          newProduct,
+        },
+      });
     });
   } catch (err) {
     res.status(404).json({
@@ -88,10 +88,9 @@ exports.updateMenu = async (req, res) => {
   }
 };
 
-// Error om produkten inte finns??
 exports.deleteProduct = async (req, res) => {
   try {
-    await Product.findOneAndDelete(req.params.id);
+    await Product.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
       status: 'success',
@@ -100,7 +99,7 @@ exports.deleteProduct = async (req, res) => {
     console.log(err);
     res.status(404).json({
       status: 'fail',
-      message: err,
+      message: 'No product found!',
     });
   }
 };
