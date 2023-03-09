@@ -8,6 +8,7 @@ This Airbean API was created for learning purposes using different "often used" 
 - Mongoose
 - JWT Token
 - bcrypt
+- Express-rate-limit
 
 ## The application is divided by
 
