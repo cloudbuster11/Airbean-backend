@@ -4,10 +4,11 @@ const cors = require('cors');
 const app = express();
 const { limiters } = require('./middleware');
 
-const guestRouter = require('./routes/guestRoutes');
 const menuRouter = require('./routes/menuRoutes');
+const guestRouter = require('./routes/guestRoutes');
+const signRouter = require('./routes/signRoutes');
 const adminRouter = require('./routes/adminRoutes');
-const authRouter = require('./routes/authRoutes');
+const userRouter = require('./routes/userRoutes');
 
 const corsOptions = {
   origin: 'http://localhost:8000',
@@ -38,7 +39,8 @@ app.use((req, res, next) => {
 
 app.use('/api/menu', limiters.apiLimiter, menuRouter);
 app.use('/api/guest', limiters.apiLimiter, guestRouter);
-app.use('/api/admin', limiters.apiLimiter, adminRouter);
-app.use('/api/user', authRouter);
+app.use('/api/sign', signRouter);
+app.use('/api/auth/admin', limiters.apiLimiter, adminRouter);
+app.use('/api/auth/user', userRouter);
 
 module.exports = app;

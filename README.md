@@ -76,7 +76,7 @@ Mongodb connection URI:
 
 - GET Order status Guest - /api/guest/order/status/:id
 
-- POST Sign up - /api/user/auth/signup
+- POST Sign up - /api/sign/signup
 
   - Body:
     {
@@ -86,7 +86,7 @@ Mongodb connection URI:
     "roles": ["user", "admin"]
     }
 
-- POST Sign in - /api/user/auth/signin
+- POST Sign in - /api/sign/signin
 
   - Body:
     {
@@ -100,7 +100,7 @@ Mongodb connection URI:
 
   #### Include Header Authorization Bearer Token in following routes!
 
-- POST Order as Signed in - /api/user/auth/order
+- POST Order as Signed in - /api/auth/user/order
 
   - Body:
     {
@@ -118,23 +118,23 @@ Mongodb connection URI:
     }
     }
 
-- GET Order history - /api/user/auth/orderhistory
+- GET Order history - /api/auth/user/orderhistory
 
-- GET Orderstatus - /api/user/auth/:id
+- GET Orderstatus - /api/auth/user/orderstatus/:id
 
   ## Admin Routes
 
   #### Include Header Authorization Bearer Token in following routes!
 
-- GET All orders - /api/admin/auth/allorders
+- GET All orders - /api/auth/admin/allorders
 
   - Paging - ?limit=2&page=2
   - Sorting - ?sort=-userId
   - Fields - ?fields=userId
 
-- GET Menu - /api/admin/auth/menu \*Will be deleted.
+- GET Menu - /api/auth/admin/menu \*Will be deleted.
 
-- POST Add product to menu - /api/admin/auth/menu
+- POST Add product to menu - /api/auth/admin/menu
 
   - Body:
     {
@@ -143,11 +143,11 @@ Mongodb connection URI:
     "price": 43
     }
 
-- PATCH Patch Product - /api/admin/auth/menu/:id
+- PATCH Patch Product - /api/auth/admin/menu/:id
 
   - Body:
     {
     "title": "En Fluffig Semla"
     }
 
-- DELETE Delete product from menu - /api/admin/auth/menu/:id
+- DELETE Delete product from menu - /api/auth/admin/menu/:id
