@@ -6,12 +6,12 @@ const router = express.Router();
 
 router.get('/allorders', [authJwt.verifyToken, authJwt.isAdmin], adminController.getAllOrders);
 
-router.get('/menu', [authJwt.verifyToken, authJwt.isAdmin], adminController.getMenu);
+router
+  .get('/menu', [authJwt.verifyToken, authJwt.isAdmin], adminController.getMenu)
+  .post('/menu', [authJwt.verifyToken, authJwt.isAdmin], adminController.addToMenu);
 
-router.post('/menu', [authJwt.verifyToken, authJwt.isAdmin], adminController.addToMenu);
-
-router.patch('/menu/:id', [authJwt.verifyToken, authJwt.isAdmin], adminController.updateMenu);
-
-router.delete('/menu/:id', [authJwt.verifyToken, authJwt.isAdmin], adminController.deleteProduct);
+router
+  .patch('/menu/:id', [authJwt.verifyToken, authJwt.isAdmin], adminController.updateMenu)
+  .delete('/menu/:id', [authJwt.verifyToken, authJwt.isAdmin], adminController.deleteProduct);
 
 module.exports = router;
