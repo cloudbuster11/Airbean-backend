@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const app = express();
+const RateLimit = require('express-rate-limit');
 
 const guestRouter = require('./routes/guestRoutes');
 const menuRouter = require('./routes/menuRoutes');
@@ -19,6 +20,14 @@ app.use(cors(corsOptions));
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 5,
+});
+
+// apply rate limiter to all requests
+app.use(limiter);
 
 app.use(express.json());
 
