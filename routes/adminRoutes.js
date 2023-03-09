@@ -4,14 +4,14 @@ const adminController = require('../controllers/adminController');
 
 const router = express.Router();
 
-router.get('/auth/allorders', [authJwt.verifyToken, authJwt.isAdmin], adminController.getAllOrders);
+router.get('/allorders', [authJwt.verifyToken, authJwt.isAdmin], adminController.getAllOrders);
 
-router.get('/auth/menu', [authJwt.verifyToken, authJwt.isAdmin], adminController.getMenu);
+router
+  .get('/menu', [authJwt.verifyToken, authJwt.isAdmin], adminController.getMenu)
+  .post('/menu', [authJwt.verifyToken, authJwt.isAdmin], adminController.addToMenu);
 
-router.post('/auth/menu', [authJwt.verifyToken, authJwt.isAdmin], adminController.addToMenu);
-
-router.patch('/auth/menu/:id', [authJwt.verifyToken, authJwt.isAdmin], adminController.updateMenu);
-
-router.delete('/auth/menu/:id', [authJwt.verifyToken, authJwt.isAdmin], adminController.deleteProduct);
+router
+  .patch('/menu/:id', [authJwt.verifyToken, authJwt.isAdmin], adminController.updateMenu)
+  .delete('/menu/:id', [authJwt.verifyToken, authJwt.isAdmin], adminController.deleteProduct);
 
 module.exports = router;

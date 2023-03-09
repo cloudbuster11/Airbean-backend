@@ -1,4 +1,4 @@
-const utils = require('../utils/');
+const utils = require('../utils');
 const calculateNewEta = utils.calculateNewEta;
 const models = require('../models');
 const OrderUser = models.orderUser;
