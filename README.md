@@ -61,26 +61,6 @@ Mongodb connection URI:
 
 - GET Menu - /api/menu/
 
-- POST Order as Guest - /api/guest/order
-
-  - Body:
-    {
-    "details": {
-    "order": [
-    {
-    "name": "Bryggkaffe",
-    "price": 29
-    },
-    {
-    "name": "Kaffe Latte",
-    "price": 54
-    }
-    ]
-    }
-    }
-
-- GET Order status Guest - /api/guest/order/status/:id
-
 - POST Sign up - /api/sign/signup
 
   - Body:

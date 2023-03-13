@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-const User = require('../models/userModel');
 
-const orderUserSchema = new mongoose.Schema({
+const orderSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now(),
@@ -43,6 +42,6 @@ const orderUserSchema = new mongoose.Schema({
   ],
 });
 
-const OrderUser = mongoose.model('OrderUser', orderUserSchema);
+const Order = mongoose.model('Order', orderSchema);
 
-module.exports = OrderUser;
+module.exports = Order;

@@ -1,8 +1,8 @@
-const { OrderUser, Product } = require('../models');
+const { Order, Product } = require('../models');
 const { apiFeatures, catchAsync, AppError } = require('../utils/');
 
 exports.getAllOrders = catchAsync(async (req, res, next) => {
-  const features = new apiFeatures(OrderUser.find(), req.query).filter().sort().limitFields().paginate();
+  const features = new apiFeatures(Order.find(), req.query).filter().sort().limitFields().paginate();
   const allOrders = await features.query;
 
   res.status(200).json({

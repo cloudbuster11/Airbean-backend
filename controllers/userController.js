@@ -1,4 +1,4 @@
-const { OrderUser, User } = require('../models');
+const { Order, User } = require('../models');
 const { catchAsync, calculateNewEta, AppError } = require('../utils');
 
 const filterObj = (obj, ...allowedFields) => {
@@ -12,7 +12,7 @@ const filterObj = (obj, ...allowedFields) => {
 
 exports.createOrder = catchAsync(async (req, res) => {
   console.log(req.user._id);
-  const newOrder = await OrderUser.create({ userId: req.user._id, products: req.body });
+  const newOrder = await Order.create({ userId: req.user._id, products: req.body });
 
   res.status(201).json({
     status: 'success',
@@ -23,7 +23,7 @@ exports.createOrder = catchAsync(async (req, res) => {
 });
 
 exports.getOrderStatus = catchAsync(async (req, res, next) => {
-  const order = await OrderUser.findById(req.params.id);
+  const order = await Order.findById(req.params.id);
 
   if (!order) {
     return next(new AppError('No order found with that ID.', 404));
@@ -40,7 +40,7 @@ exports.getOrderStatus = catchAsync(async (req, res, next) => {
 
 exports.getUserOrderHistory = catchAsync(async (req, res, next) => {
   console.log('userhistory');
-  const orderHistory = await OrderUser.find({ userId: req.user._id });
+  const orderHistory = await Order.find({ userId: req.user._id });
 
   res.status(200).send({
     status: 'success',

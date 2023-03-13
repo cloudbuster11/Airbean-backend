@@ -11,7 +11,6 @@ const { AppError } = require('./utils');
 
 const globalErrorHandler = require('./controllers/errorController');
 const menuRouter = require('./routes/menuRoutes');
-const guestRouter = require('./routes/guestRoutes');
 const signRouter = require('./routes/signRoutes');
 const adminRouter = require('./routes/adminRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -67,7 +66,6 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/api/menu', menuRouter);
-app.use('/api/guest', guestRouter);
 app.use('/api/sign', signRouter);
 app.use('/api/auth/admin', adminRouter);
 app.use('/api/auth/user', userRouter);
