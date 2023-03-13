@@ -9,6 +9,8 @@ This Airbean API was created for learning purposes using different "often used" 
 - JWT Token
 - bcrypt
 - Express-rate-limit
+- Validator
+- Helmet
 
 ## The application is divided by
 

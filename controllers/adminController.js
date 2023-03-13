@@ -1,111 +1,62 @@
-const models = require('../models');
-const Order = require('../models/orderGuestModel');
-const OrderUser = models.orderUser;
-const Product = models.product;
+const { OrderUser, Product } = require('../models');
+const { apiFeatures, catchAsync, AppError } = require('../utils/');
 
-const utils = require('../utils/');
-const apiFeatures = utils.apiFeatures;
+exports.getAllOrders = catchAsync(async (req, res, next) => {
+  const features = new apiFeatures(OrderUser.find(), req.query).filter().sort().limitFields().paginate();
+  const allOrders = await features.query;
 
-exports.getAllOrders = async (req, res) => {
-  try {
-    const features = new apiFeatures(OrderUser.find(), req.query).filter().sort().limitFields().paginate();
-    const allOrders = await features.query;
+  res.status(200).json({
+    status: 'success',
+    results: allOrders.length,
+    data: {
+      allOrders,
+    },
+  });
+});
 
-    res.status(200).json({
-      status: 'success',
-      results: allOrders.length,
-      data: {
-        allOrders,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
+exports.getMenu = catchAsync(async (req, res) => {
+  const menu = await Product.find();
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      menu,
+    },
+  });
+});
+
+exports.addToMenu = catchAsync(async (req, res, next) => {
+  const newProduct = await Product.create(req.body);
+
+  res.status(201).json({ status: 'success', data: newProduct });
+});
+
+exports.updateMenu = catchAsync(async (req, res, next) => {
+  const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!product) {
+    return next(new AppError('No Product found with that ID.', 404));
   }
-};
 
-exports.getMenu = async (req, res) => {
-  try {
-    const menu = await Product.find();
+  res.status(200).json({
+    status: 'success',
+    data: {
+      product,
+    },
+  });
+});
 
-    res.status(200).json({
-      status: 'success',
-      data: {
-        menu,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
+exports.deleteProduct = catchAsync(async (req, res, next) => {
+  const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+
+  if (!deletedProduct) {
+    return next(new AppError('No product found with that id.', 404));
   }
-};
-
-exports.addToMenu = async (req, res) => {
-  try {
-    const newProduct = new Product({
-      title: req.body.title,
-      desc: req.body.desc,
-      price: req.body.price,
-    });
-
-    newProduct.save((err, newProduct) => {
-      if (err) {
-        console.log(err);
-        res.status(200).send({ message: err });
-        return;
-      }
-      res.status(200).json({
-        status: 'success',
-        data: {
-          newProduct,
-        },
-      });
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
-  }
-};
-
-exports.updateMenu = async (req, res) => {
-  try {
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-
-    res.status(200).json({
-      status: 'success',
-      data: {
-        product,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
-  }
-};
-
-exports.deleteProduct = async (req, res) => {
-  try {
-    await Product.findByIdAndDelete(req.params.id);
-
-    res.status(200).json({
-      status: 'success',
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(404).json({
-      status: 'fail',
-      message: 'No product found!',
-    });
-  }
-};
+  res.status(200).json({
+    status: 'success',
+    message: `${deletedProduct.title} was removed from menu.`,
+  });
+});

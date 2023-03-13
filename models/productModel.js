@@ -1,15 +1,11 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
-  // id: {
-  //   type: String,
-  //   // required: [true, 'A product must have a id.'],
-  //   unique: true,
-  //   trim: true,
-  // },
+  // _id: mongoose.Schema.Types.ObjectId,
   title: {
     type: String,
     required: [true, 'A product must have a title.'],
+    unique: [true, 'A product must have a unique title.'],
   },
   desc: {
     type: String,
@@ -18,6 +14,8 @@ const productSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: [true, 'A product must have a price.'],
+    min: [1, 'Price must be above 1'],
+    // max: [5, 'Rating must be below 5.0'],
   },
 });
 

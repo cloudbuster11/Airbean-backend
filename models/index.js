@@ -5,12 +5,11 @@ const models = {};
 
 models.mongoose = mongoose;
 
-models.user = require('./userModel');
-models.role = require('./roleModel');
-models.orderUser = require('./orderUserModel');
-models.orderGuest = require('./orderGuestModel');
-models.product = require('./productModel');
+models.User = require('./userModel');
+models.OrderUser = require('./orderUserModel');
+models.OrderGuest = require('./orderGuestModel');
+models.Product = require('./productModel');
 
-models.ROLES = ['user', 'admin'];
+models.ROLESSTRING = ['user', 'admin'];
 
 module.exports = models;

@@ -3,9 +3,11 @@ const bcrypt = require('bcryptjs');
 const dotenv = require('dotenv');
 dotenv.config({ path: '../config.env' });
 
-const models = require('../models');
-const User = models.user;
-const Role = models.role;
+const { User, Role } = require('../models');
+
+// const models = require('../models');
+// const User = models.user;
+// const Role = models.role;
 
 exports.signup = (req, res) => {
   const user = new User({

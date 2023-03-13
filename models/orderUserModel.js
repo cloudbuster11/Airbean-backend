@@ -20,17 +20,24 @@ const orderUserSchema = new mongoose.Schema({
   },
   products: [
     {
-      name: {
+      title: {
         type: String,
-        required: [true, 'A Order must have a Name.'],
+        ref: 'Products',
+        required: [true, 'A Order must have a valid title.'],
       },
-      productId: {
-        type: String,
-        required: [true, 'A Order must have a Product Id.'],
+      // productId: {
+      //   type: String,
+      //   required: [true, 'A Order must have a Product Id.'],
+      // },
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Products',
+        required: [true, 'A Order must have a valid product id.'],
       },
       price: {
         type: Number,
-        required: [true, 'A Order must have a Price.'],
+        ref: 'Products',
+        required: [true, 'A Order must have a valid price.'],
       },
     },
   ],
