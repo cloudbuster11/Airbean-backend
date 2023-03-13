@@ -1,4 +1,4 @@
-# Airbean API Documentation
+# Airbean API Documentation (Documentation is not up to date with code!)
 
 This Airbean API was created for learning purposes using different "often used" technologies for example:
 
@@ -11,6 +11,9 @@ This Airbean API was created for learning purposes using different "often used" 
 - Express-rate-limit
 - Validator
 - Helmet
+- Express-mongo-sanitize
+- Xss-clean
+- Hpp
 
 ## The application is divided by
 
