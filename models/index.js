@@ -8,7 +8,6 @@ models.mongoose = mongoose;
 models.User = require('./userModel');
 models.Order = require('./orderModel');
 models.Product = require('./productModel');
-
-models.ROLESSTRING = ['user', 'admin'];
+models.Review = require('./reviewModel');
 
 module.exports = models;

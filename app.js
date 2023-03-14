@@ -10,10 +10,10 @@ const app = express();
 const { AppError } = require('./utils');
 
 const globalErrorHandler = require('./controllers/errorController');
-const menuRouter = require('./routes/menuRoutes');
-const signRouter = require('./routes/signRoutes');
+const productRouter = require('./routes/productRoutes');
 const adminRouter = require('./routes/adminRoutes');
 const userRouter = require('./routes/userRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 
 const corsOptions = {
   origin: 'http://localhost:8000',
@@ -65,10 +65,10 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use('/api/menu', menuRouter);
-app.use('/api/sign', signRouter);
-app.use('/api/auth/admin', adminRouter);
-app.use('/api/auth/user', userRouter);
+app.use('/api/product', productRouter);
+app.use('/api/admin', adminRouter);
+app.use('/api/user', userRouter);
+app.use('/api/reviews', reviewRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
