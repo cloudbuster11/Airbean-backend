@@ -5,10 +5,25 @@ const authController = require('../controllers/authController');
 
 const router = express.Router();
 
-// Skickar vidare reviewRouter Matchar ###
+// Skickar vidare till reviewRouter Matchar ###
 router.use('/:productId/reviews', reviewRouter);
 
-router.route('/').get(productController.getAllProducts);
-router.route('/:id').get(productController.getProduct);
+router.get(
+  '/orders',
+  authController.protect,
+  authController.restrictTo('admin'),
+  productController.getAllOrders
+);
+
+router
+  .route('/')
+  .get(productController.getAllProducts)
+  .post(authController.protect, authController.restrictTo('admin'), productController.createProduct);
+
+router
+  .route('/:id')
+  .get(productController.getProduct)
+  .patch(authController.protect, authController.restrictTo('admin'), productController.updateProduct)
+  .delete(authController.protect, authController.restrictTo('admin'), productController.deleteProduct);
 
 module.exports = router;

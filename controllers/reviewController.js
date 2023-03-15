@@ -1,34 +1,18 @@
-const { Order, Review } = require('../models');
-const { catchAsync, AppError } = require('../utils');
+const { Review } = require('../models');
 
-exports.getAllReviews = catchAsync(async (req, res) => {
-  let filter = {};
-  // Om inget params med productId så hämta alla reviews.
-  if (req.params.productId) filter = { product: req.params.productId };
+const factory = require('./handlerFactory');
 
-  const allReviews = await Review.find(filter);
-
-  res.status(200).json({
-    status: 'success',
-    results: allReviews.length,
-    data: {
-      reviews: allReviews,
-    },
-  });
-});
-
-exports.createReview = catchAsync(async (req, res) => {
+// Middleware
+exports.setProductUserIds = (req, res, next) => {
   // Ger tillgång till nested routes.
   if (!req.body.product) req.body.product = req.params.productId;
   // if (!req.body.user) req.body.user = req.user.id;
   req.body.user = req.user.id;
+  next();
+};
 
-  const newReview = await Review.create(req.body);
-
-  res.status(201).json({
-    status: 'success',
-    data: {
-      review: newReview,
-    },
-  });
-});
+exports.getAllReviews = factory.getAll(Review);
+exports.getReview = factory.getOne(Review);
+exports.createReview = factory.createOne(Review);
+exports.updateReview = factory.updateOne(Review);
+exports.deleteReview = factory.deleteOne(Review);

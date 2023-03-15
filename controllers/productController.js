@@ -1,28 +1,11 @@
-const { Product } = require('../models');
-const { catchAsync, AppError } = require('../utils');
+const { Product, Order } = require('../models');
+const factory = require('./handlerFactory');
 
-exports.getAllProducts = catchAsync(async (req, res, next) => {
-  const menu = await Product.find();
+exports.getAllProducts = factory.getAll(Product, { path: 'reviews' });
+exports.getProduct = factory.getOne(Product, { path: 'reviews' });
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      menu,
-    },
-  });
-});
-
-exports.getProduct = catchAsync(async (req, res, next) => {
-  const product = await Product.findById(req.params.id).populate('reviews');
-
-  if (!product) {
-    return next(new AppError('No product with that ID found.'));
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      product,
-    },
-  });
-});
+// Admin
+exports.getAllOrders = factory.getAll(Order);
+exports.createProduct = factory.createOne(Product);
+exports.updateProduct = factory.updateOne(Product);
+exports.deleteProduct = factory.deleteOne(Product);

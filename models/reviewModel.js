@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Product = require('./productModel');
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -29,6 +30,7 @@ const reviewSchema = new mongoose.Schema(
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+    id: false,
   }
 );
 
@@ -40,6 +42,31 @@ reviewSchema.pre(/^find/, function (next) {
   });
 
   next();
+});
+
+// Static methods
+reviewSchema.statics.calcAverageRatings = async function ({ _id: productId }) {
+  const stats = await this.aggregate([
+    { $match: { product: productId } },
+    {
+      $group: {
+        _id: '$product',
+        nRating: { $sum: 1 },
+        avgRating: { $avg: '$rating' },
+      },
+    },
+  ]);
+
+  await Product.findByIdAndUpdate(productId, {
+    ratingsQuantity: stats[0].nRating,
+    ratingsAverage: stats[0].avgRating,
+  });
+};
+
+reviewSchema.post('save', function () {
+  // this pekar på current review
+
+  this.constructor.calcAverageRatings(this.product);
 });
 
 const Review = mongoose.model('Review', reviewSchema);

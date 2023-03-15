@@ -16,14 +16,22 @@ const productSchema = new mongoose.Schema(
       required: [true, 'A product must have a price.'],
       min: [1, 'Price must be above 1'],
     },
-    quantity: {
+    ratingsAverage: {
       type: Number,
-      required: [true, 'A product must have a quantity.'],
-      default: 1,
+      default: 4.0,
+      min: [1, 'Rating must be above 1.0'],
+      max: [5, 'Rating must be below 5.0'],
+      set: (val) => Math.round(val * 10) / 10, // 4.666666, 46.6666, 47, 4.7
+    },
+    ratingsQuantity: {
+      type: Number,
+      default: 0,
     },
   },
-  { toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  { toJSON: { virtuals: true }, toObject: { virtuals: true }, id: false }
 );
+
+productSchema.index({ price: 1, ratingsAverage: -1 });
 
 // Virtual populate. Istället för att spara en ref till alla reviews som tillhör produkten i db.
 productSchema.virtual('reviews', {

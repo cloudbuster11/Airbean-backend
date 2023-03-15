@@ -10,17 +10,23 @@ router.post('/login', authController.login);
 
 router.post('/forgotpassword', authController.forgotPassword);
 router.patch('/resetpassword/:token', authController.resetPassword);
-router.patch('/updatemypassword', authController.protect, authController.updatePassword);
 
-router.patch('/updateme', authController.protect, userController.updateMe);
-router.delete('/deleteme', authController.protect, userController.deleteMe);
+// Skyddar alla routes efter den middleware.
+router.use(authController.protect);
 
-router.get('/history', authController.protect, userController.getUserOrderHistory);
-router.post('/order', authController.protect, userController.createOrder);
+router.patch('/updatemypassword', authController.updatePassword);
 
-router.get('/orderstatus/:id', authController.protect, userController.getOrderStatus);
+router.get('/me', userController.getMe, userController.getUser);
+router.patch('/updateme', userController.updateMe);
+router.delete('/deleteme', userController.deleteMe);
 
-// Flyttas till admin
+router.post('/order', userController.createOrder);
+router.get('/history', userController.getUserOrderHistory);
+router.get('/orderstatus/:id', userController.getOrderStatus);
+
+// Endast admin kommer åt routes nedan.
+router.use(authController.restrictTo('admin'));
+
 router.route('/').get(userController.getAllUsers).post(userController.createUser);
 
 router

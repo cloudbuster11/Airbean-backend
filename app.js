@@ -7,11 +7,10 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const rateLimit = require('express-rate-limit');
 const app = express();
-const { AppError } = require('./utils');
 
+const { AppError } = require('./utils');
 const globalErrorHandler = require('./controllers/errorController');
 const productRouter = require('./routes/productRoutes');
-const adminRouter = require('./routes/adminRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 
@@ -66,7 +65,6 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/api/product', productRouter);
-app.use('/api/admin', adminRouter);
 app.use('/api/user', userRouter);
 app.use('/api/reviews', reviewRouter);
 
