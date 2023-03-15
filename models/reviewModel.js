@@ -34,6 +34,9 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
+// Förhindrar att en användare kan skriv flera recensioner av samma produkt.
+reviewSchema.index({ product: 1, user: 1 }, { unique: true });
+
 reviewSchema.pre(/^find/, function (next) {
   // this.populate({ path: 'product', select: 'title' }).populate({ path: 'user', select: 'name' });
   this.populate({
@@ -56,17 +59,39 @@ reviewSchema.statics.calcAverageRatings = async function ({ _id: productId }) {
       },
     },
   ]);
-
-  await Product.findByIdAndUpdate(productId, {
-    ratingsQuantity: stats[0].nRating,
-    ratingsAverage: stats[0].avgRating,
-  });
+  // Om det inte finns några reviews.
+  if (stats.length > 0) {
+    await Product.findByIdAndUpdate(productId, {
+      ratingsQuantity: stats[0].nRating,
+      ratingsAverage: stats[0].avgRating,
+    });
+  } else {
+    await Product.findByIdAndUpdate(productId, {
+      ratingsQuantity: 0,
+      ratingsAverage: 4.5,
+    });
+  }
 };
 
 reviewSchema.post('save', function () {
   // this pekar på current review
+  // await this.findOne() fungerar inte här, query har redan körts.
 
   this.constructor.calcAverageRatings(this.product);
+});
+
+// findByIdAndUpdate
+// findByIdAndDelete är en förenkling av findoneandupdate osv.
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+  // this = query. r = doc från db. inte uppdaterade doc
+  this.r = await this.clone().findOne();
+  // console.log(this.r);
+  next();
+});
+
+reviewSchema.post(/^findOneAnd/, async function () {
+  // Nu har documentet blivit uppdaterat med nya
+  await this.r.constructor.calcAverageRatings(this.r.product);
 });
 
 const Review = mongoose.model('Review', reviewSchema);

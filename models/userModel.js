@@ -45,7 +45,10 @@ const UserSchema = mongoose.Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
-  photo: String,
+  photo: {
+    type: String,
+    default: 'default.svg',
+  },
   active: {
     type: Boolean,
     default: true,

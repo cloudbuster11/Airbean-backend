@@ -4,6 +4,7 @@ const router = express.Router({ mergeParams: true });
 
 const authController = require('../controllers/authController');
 const reviewController = require('../controllers/reviewController');
+const { checkUserId } = require('../utils');
 
 // ###
 router
@@ -19,7 +20,7 @@ router
 router
   .route('/:id')
   .get(reviewController.getReview)
-  .patch(authController.protect, reviewController.updateReview)
-  .delete(authController.protect, reviewController.deleteReview);
+  .patch(authController.protect, checkUserId, reviewController.updateReview)
+  .delete(authController.protect, checkUserId, reviewController.deleteReview);
 
 module.exports = router;
