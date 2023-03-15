@@ -1,6 +1,7 @@
 node_modules
 config.env
 .DS_store
+public/
 
 .env.local
 .env.development.local
