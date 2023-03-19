@@ -1,71 +1,64 @@
 const nodemailer = require('nodemailer');
-const { catchAsync } = require('./catchAsync');
-// Ny
-const SMTPConnection = require('nodemailer/lib/smtp-connection');
+const pug = require('pug');
+const { htmlToText } = require('html-to-text');
 
-const sendEmail = async (options) => {
-  // Create a transporter
-  const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST_TEST,
-    port: process.env.EMAIL_PORT_TEST,
-    secure: false,
-    logger: true,
-    auth: { user: process.env.EMAIL_USERNAME_TEST, pass: process.env.EMAIL_PASSWORD_TEST },
-  });
-  // Define email options
-  const mailOptions = {
-    from: 'Airbean <airbean@joakimtrulsson.se>',
-    to: options.email,
-    subject: options.subject,
-    text: options.message,
-    // html:
-  };
-  // Send
-  await transporter.sendMail(mailOptions);
+// Skicka ett nytt email => new Email(user, url).sendWelcome .sendPasswordReset
+module.exports = class Email {
+  constructor(user, url) {
+    (this.to = user.email),
+      (this.firstName = user.name.split(' ')[0]),
+      (this.url = url),
+      (this.from = `${process.env.EMAIL_FROM}}`);
+  }
+
+  newTransport() {
+    if (process.env.NODE_ENV === 'production') {
+      // Sendgrid
+      return nodemailer.createTransport({
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+    }
+    return nodemailer.createTransport({
+      host: process.env.EMAIL_HOST_DEV,
+      port: process.env.EMAIL_PORT_DEV,
+      secure: false,
+      // logger: true,
+      auth: { user: process.env.EMAIL_USERNAME_DEV, pass: process.env.EMAIL_PASSWORD_DEV },
+    });
+  }
+
+  // Skickar mailet.
+  async send(template, subject) {
+    // Rendera html baserad på pug template. __dirname = nuvarande script som körs, utils.
+    const html = pug.renderFile(`${__dirname}/../views/emails/${template}.pug`, {
+      firstName: this.firstName,
+      url: this.url,
+      subject,
+    });
+    // Definera emailOptions.
+    const mailOptions = {
+      from: process.env.EMAIL_USERNAME,
+      to: this.to,
+      subject,
+      html,
+      text: htmlToText(html),
+    };
+
+    await this.newTransport().sendMail(mailOptions);
+  }
+  // Transport
+
+  async sendWelcome() {
+    // this  efter dom defingeras på det akutelle objektet.
+    await this.send('welcome', 'Welcome to AirBean!');
+  }
+  async sendPasswordReset() {
+    // this  efter dom defingeras på det akutelle objektet.
+    await this.send('passwordReset', 'Password Reset(Valid for 10 minutes)');
+  }
 };
-
-// async function myCustomMethod(ctx) {
-//   console.log('ctx', ctx);
-//   let cmd = await ctx.sendCommand(
-//     'AUTH PLAIN ' +
-//       Buffer.from(
-//         '\u0000' + ctx.auth.credentials.user + '\u0000' + ctx.auth.credentials.pass,
-//         'utf-8'
-//       ).toString('base64')
-//   );
-
-//   if (cmd.status < 200 || cmd.status >= 300) {
-//     throw new Error('Failed to authenticate user: ' + cmd.text);
-//   }
-// }
-
-// const sendEmailOne = async (options) => {
-//   // Create a transporter
-//   const transporter = nodemailer.createTransport({
-//     host: process.env.EMAIL_HOST,
-//     port: process.env.EMAIL_PORT,
-//     secure: true,
-//     logger: true,
-//     auth: {
-//       type: 'custom',
-//       method: 'plain', // forces Nodemailer to use your custom handler
-//       user: process.env.EMAIL_USERNAME,
-//       pass: process.env.PASSWORD,
-//     },
-//     customAuth: {
-//       plain: myCustomMethod(auth),
-//     },
-//   });
-//   // Define email options
-//   const mailOption = {
-//     from: 'Airbean <airbean@joakimtrulsson.se>',
-//     to: options.email,
-//     subject: options.subject,
-//     text: options.message,
-//     // html:
-//   };
-//   // Send
-//   await transporter.sendMail(mailOption);
-// };
-
-module.exports = sendEmail;

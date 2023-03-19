@@ -1,31 +1,33 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const hpp = require('hpp');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
-const hpp = require('hpp');
 const rateLimit = require('express-rate-limit');
-const app = express();
 
 const { AppError } = require('./utils');
 const globalErrorHandler = require('./controllers/errorController');
 const productRouter = require('./routes/productRoutes');
 const userRouter = require('./routes/userRoutes');
+const orderRouter = require('./routes/orderRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 
-const corsOptions = {
-  origin: 'http://localhost:8000',
-};
+const app = express();
 
-// Global Middleware
+app.enable('trust proxy');
+
+// Globala Middleware
 // Security HTTP headers
-app.use(cors(corsOptions));
-app.use(helmet());
+app.use(cors());
+
+app.options('*', cors());
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+app.use(helmet());
 
 const limiter = rateLimit({
   max: 100,
@@ -67,6 +69,7 @@ app.use((req, res, next) => {
 app.use('/api/product', productRouter);
 app.use('/api/user', userRouter);
 app.use('/api/reviews', reviewRouter);
+app.use('/api/orders', orderRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

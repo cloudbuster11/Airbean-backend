@@ -14,6 +14,10 @@ This Airbean API was created for learning purposes using different "often used" 
 - Express-mongo-sanitize
 - Xss-clean
 - Hpp
+- Pug
+- Html-To-Text
+- https://github.com/leemunroe/responsive-html-email-template Email Template
+- Stripe Payment
 
 ## The application is divided by
 

@@ -1,13 +1,30 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
 
 const orderSchema = new mongoose.Schema({
-  createdAt: {
-    type: Date,
-    default: Date.now(),
-  },
-  userId: {
-    type: Schema.Types.ObjectId,
+  products: [
+    {
+      _id: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Product',
+        required: [true, 'An order must belong to a product.'],
+      },
+      title: {
+        type: String,
+      },
+      price: {
+        type: Number,
+        ref: 'Product',
+        require: [true, 'A product must have a price.'],
+      },
+      quantity: {
+        type: Number,
+        required: [true, 'A product must have a quantity.'],
+        // default: 1,
+      },
+    },
+  ],
+  user: {
+    type: mongoose.Schema.ObjectId,
     ref: 'User',
     required: [true, 'A order must have a User Id.'],
   },
@@ -17,29 +34,18 @@ const orderSchema = new mongoose.Schema({
       return Math.floor(Math.random() * (25 - 5 + 1) + 5);
     },
   },
-  products: [
-    {
-      title: {
-        type: String,
-        ref: 'Products',
-        required: [true, 'A Order must have a valid title.'],
-      },
-      // productId: {
-      //   type: String,
-      //   required: [true, 'A Order must have a Product Id.'],
-      // },
-      _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Products',
-        required: [true, 'A Order must have a valid product id.'],
-      },
-      price: {
-        type: Number,
-        ref: 'Products',
-        required: [true, 'A Order must have a valid price.'],
-      },
-    },
-  ],
+  totalPrice: {
+    type: Number,
+    // required: [true, 'A order must have a price.'],
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
+  paid: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const Order = mongoose.model('Order', orderSchema);

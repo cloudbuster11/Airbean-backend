@@ -8,13 +8,6 @@ const router = express.Router();
 // Skickar vidare till reviewRouter Matchar ###
 router.use('/:productId/reviews', reviewRouter);
 
-router.get(
-  '/orders',
-  authController.protect,
-  authController.restrictTo('admin'),
-  productController.getAllOrders
-);
-
 router
   .route('/')
   .get(productController.getAllProducts)

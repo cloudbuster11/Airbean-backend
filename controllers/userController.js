@@ -58,7 +58,7 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.createOrder = catchAsync(async (req, res) => {
+exports.createOrder = catchAsync(async (req, res, next) => {
   const newOrder = await Order.create({ userId: req.user._id, products: req.body });
 
   res.status(201).json({
@@ -66,33 +66,6 @@ exports.createOrder = catchAsync(async (req, res) => {
     details: {
       order: newOrder,
     },
-  });
-});
-
-exports.getOrderStatus = catchAsync(async (req, res, next) => {
-  const order = await Order.findById(req.params.id);
-
-  if (!order) {
-    return next(new AppError('No order found with that ID.', 404));
-  }
-  const newEta = calculateNewEta(order.createdAt, order.eta);
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      eta: newEta,
-    },
-  });
-});
-
-exports.getUserOrderHistory = catchAsync(async (req, res, next) => {
-  console.log('userhistory');
-  const orderHistory = await Order.find({ userId: req.user._id });
-
-  res.status(200).send({
-    status: 'success',
-    results: orderHistory.length,
-    data: orderHistory,
   });
 });
 
@@ -135,6 +108,12 @@ exports.createUser = (req, res) => {
   res.status(500).json({
     status: 'error',
     message: 'This route is not defined Please use signup instead.',
+  });
+};
+
+exports.tempfunc = (req, res, next) => {
+  res.status(200).json({
+    status: 'success',
   });
 };
 

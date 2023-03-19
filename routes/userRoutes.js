@@ -11,7 +11,6 @@ router.post('/login', authController.login);
 router.post('/forgotpassword', authController.forgotPassword);
 router.patch('/resetpassword/:token', authController.resetPassword);
 
-// Skyddar alla routes efter den middleware.
 router.use(authController.protect);
 
 router.patch('/updatemypassword', authController.updatePassword);
@@ -26,8 +25,6 @@ router.patch(
 router.delete('/deleteme', userController.deleteMe);
 
 router.post('/order', userController.createOrder);
-router.get('/history', userController.getUserOrderHistory);
-router.get('/orderstatus/:id', userController.getOrderStatus);
 
 // Endast admin kommer åt routes nedan.
 router.use(authController.restrictTo('admin'));

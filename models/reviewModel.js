@@ -85,7 +85,6 @@ reviewSchema.post('save', function () {
 reviewSchema.pre(/^findOneAnd/, async function (next) {
   // this = query. r = doc från db. inte uppdaterade doc
   this.r = await this.clone().findOne();
-  // console.log(this.r);
   next();
 });
 

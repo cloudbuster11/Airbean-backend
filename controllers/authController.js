@@ -3,20 +3,24 @@ const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 
 const { User } = require('../models');
-const { catchAsync, AppError, sendEmail } = require('../utils');
+const { catchAsync, AppError } = require('../utils');
+
+const Email = require('../utils/email');
 
 const signToken = (id) => {
   return jwt.sign({ id: id }, process.env.SECRET, { expiresIn: process.env.JWTEXPIRATION });
 };
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
   const cookieOptions = {
     expires: new Date(Date.now() + process.env.TOKEN_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
     httpOnly: true,
   };
 
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true; //Gör att webbläsaren inte kan ändra i cookien.
+  // if (req.secure) cookieOptions.secure = true; //https
+  // if (req.secure || req.headers('x-forwarded-prot') === 'https') cookieOptions.secure = true; //https
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true; //https
 
   res.cookie('jwt', token, cookieOptions);
 
@@ -42,10 +46,14 @@ exports.signup = catchAsync(async (req, res, next) => {
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
     passwordChangedAt: req.body.passwordChangedAt,
-    // role: req.body.role,
   });
 
-  createSendToken(newUser, 201, res);
+  // Pekar på användares https://airbean.adreass.se/me
+  const url = `${req.protocol}://${req.get('host')}/me`;
+
+  await new Email(newUser, url).sendWelcome();
+
+  createSendToken(newUser, 201, req, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -64,7 +72,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // Om är ok!
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
 
 // Protect middleware. Flyttas till middleware.
@@ -112,7 +120,6 @@ exports.restrictTo = (...roles) => {
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   // Hämta användare baserat på email
   const user = await User.findOne({ email: req.body.email });
-  console.log(user);
 
   if (!user) {
     return next(new AppError('There is no user with email.', 404));
@@ -123,16 +130,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   // Skicka det till userns email
-  const resetURL = `${req.protocol}://${req.get('host')}/api/auth/user/resetpassword/${resetToken}`;
-
-  const message = `Forgot your password? Submit a PATCH req with your new password and passwordConfirm to ${resetURL}`;
   try {
-    await sendEmail({
-      email: user.email,
-      subject: 'Your password reset token, valid for 10 minutes.',
-      message,
-    });
-
+    const resetURL = `${req.protocol}://${req.get('host')}/api/auth/user/resetpassword/${resetToken}`;
+    await new Email(user, resetURL).sendPasswordReset();
     res.status(200).json({
       status: 'success',
       message: 'Token sent to email',
@@ -163,7 +163,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   // Uppdatera changedPasswordAt användaren
   // Logga in användaren
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -181,5 +181,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   // Logga in användaren med nya token.
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
