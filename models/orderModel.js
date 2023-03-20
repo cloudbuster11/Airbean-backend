@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Product = require('./productModel');
 
 const orderSchema = new mongoose.Schema({
   products: [
@@ -14,12 +15,18 @@ const orderSchema = new mongoose.Schema({
       price: {
         type: Number,
         ref: 'Product',
-        require: [true, 'A product must have a price.'],
+        required: [true, 'A product must have a price.'],
       },
       quantity: {
         type: Number,
         required: [true, 'A product must have a quantity.'],
-        // default: 1,
+        min: 1,
+        default: 1,
+      },
+      totalProductPrice: {
+        type: Number,
+        required: [true, 'A product must have a total price.'],
+        min: 1,
       },
     },
   ],
@@ -36,7 +43,8 @@ const orderSchema = new mongoose.Schema({
   },
   totalPrice: {
     type: Number,
-    // required: [true, 'A order must have a price.'],
+    default: 0,
+    required: [true, 'A order must have a total price.'],
   },
   createdAt: {
     type: Date,
@@ -47,6 +55,36 @@ const orderSchema = new mongoose.Schema({
     default: true,
   },
 });
+
+orderSchema.pre('save', function (next) {
+  this.totalPrice = this.products.map((product) => {
+    this.totalPrice += product.totalProductPrice;
+  });
+  console.log(this.totalPrice);
+  next();
+});
+
+// Static methods
+// orderSchema.statics.calcTotalPrice = async function (orderId) {
+//   const stats = await this.aggregate([
+//     { $match: { orderId } },
+//     // {
+//     //   $group: {
+//     //     _id: '$product',
+//     //     totalPrice: { $sum: 1 },
+
+//     //   },
+//     // },
+//   ]);
+//   console.log(orderId);
+// };
+
+// orderSchema.post('save', function () {
+//   // this pekar på current review
+//   // await this.findOne() fungerar inte här, query har redan körts.
+
+//   this.constructor.calcTotalPrice(this.order);
+// });
 
 const Order = mongoose.model('Order', orderSchema);
 

@@ -1,86 +1,116 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-const { Product, Order } = require('../models');
+const { Product, Order, User } = require('../models');
 const { catchAsync, AppError, calculateNewEta } = require('../utils');
 const factory = require('./handlerFactory');
 
-exports.cart = async () => {
-  const carts = await Order.find().populate({
-    path: 'items.productId',
-    select: 'name price total',
-  });
-  return carts[0];
-};
+let newOrderDb;
 
-exports.addItem = async (payload) => {
-  const newItem = await Order.create(payload);
-  return newItem;
-};
-
+// När användaren klickar på beställ, req.body = produkterna. Så skickas man till betalningsurlen.
 exports.getCheckoutSession = async (req, res, next) => {
-  // Hämta produkten
-  const product = await Product.findById(req.params.productId);
-
-  // Skapa en checkout session
-  const session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price_data: {
-          currency: 'sek',
-          unit_amount: product.price * 100,
-          product_data: {
-            name: `${product.title} Product`,
-            description: product.desc,
-            images: ['https://example.com/t-shirt.png'],
-            // images: [`${adress till bilden på server}`],
-          },
-        },
-        quantity: 1,
-      },
-    ],
-    // payment_method_types: ['card'],
-    mode: 'payment',
-    // success_url: `${req.protocol}://${'host'}/ordered/`,
-    success_url: `http://localhost:8000/api/user/ordered/?produc=${req.params.productId}&user=${req.user.id}&price=${product.price}`,
-    cancel_url: `${req.protocol}://${'host'}/`,
-    customer_email: req.user.email,
-    client_reference_id: req.params.productId,
+  // Abstrahera senare. Duplicate code
+  const validProducts = await Product.find({
+    _id: {
+      $in: req.body,
+    },
   });
-  // Skicka till klienten
+
+  newOrderDb = validProducts.map((product, i) => {
+    return {
+      _id: product._id,
+      title: product.title,
+      price: product.price,
+      quantity: req.body[i].quantity,
+      totalProductPrice: product.price * req.body[i].quantity,
+    };
+  });
+
+  const stripeOrderData = validProducts.map((product, i) => {
+    return {
+      price_data: {
+        currency: 'sek',
+        unit_amount: product.price * 100,
+        product_data: {
+          name: `${product.title}`,
+          description: product.desc,
+          images: [
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/500px-A_small_cup_of_coffee.JPG',
+          ],
+        },
+      },
+      quantity: req.body[i].quantity,
+    };
+  });
+
+  const session = await stripe.checkout.sessions.create({
+    line_items: stripeOrderData,
+    mode: 'payment',
+    // success_url: `${req.protocol}://${req.get('host')}/api/orders/order-history/`,
+    success_url: `http://www.dn.se`,
+    cancel_url: 'http://aftonbladet.se',
+    // cancel_url: `${req.protocol}://${'host'}/`,
+    customer_email: req.user.email,
+    // client_reference_id: req.params.productId,
+  });
+
   res.status(200).json({
     status: 'success',
     session,
   });
 };
 
-exports.createOrderCheckout = catchAsync(async (req, res, next) => {
-  // const order = await Product.find({
-  //   _id: {
-  //     $in: req.body,
-  //   },
-  // }).populate('');
+exports.webhookCheckout = (req, res, next) => {
+  const signature = req.headers['stripe-signature'];
+  // console.log(req.rawHeaders);
 
-  const newOrder = await Order.create({ user: req.user.id, products: req.body });
+  let event;
 
-  res.status(201).json({
-    status: 'success',
-    data: {
-      newOrder,
-    },
-  });
+  try {
+    event = stripe.webhooks.constructEvent(req.body, signature, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    return res.sendStatus(400).end();
+  }
 
-  // res.redirect('http://localhost:8000/api/user/ordered/');
-});
+  if (event.type === 'checkout.session.completed') {
+    createOrderCheckout(event.data.object);
+  }
+  res.status(200).end();
+};
+
+const createOrderCheckout = async (session) => {
+  const user = await User.findOne({ email: session.customer_email });
+
+  await Order.create({ user: user._id, products: newOrderDb });
+};
 
 // exports.createOrderCheckout = catchAsync(async (req, res, next) => {
-//   const { product, user, price } = req.query;
-//   if (!product && !user && !price) return next();
+//   const validProducts = await Product.find({
+//     _id: {
+//       $in: req.body,
+//     },
+//   });
 
-//   await Order.create({ product, user, price });
+//   const newOrder = validProducts.map((product, i) => {
+//     return {
+//       _id: product._id,
+//       title: product.title,
+//       price: product.price,
+//       quantity: req.body[i].quantity,
+//       totalProductPrice: product.price * req.body[i].quantity,
+//     };
+//   });
 
-//   // res.redirect(req.orignalUrl.split('?')[0]);
-//   // Efter en lyckad betalning, redirect till den här sidan.
-//   res.redirect('http://localhost:8000/api/user/ordered/');
+//   const createdOrder = await Order.create({ user: req.user._id, products: newOrder });
+
+//   res.status(201).json({
+//     status: 'success',
+//     data: {
+//       createdOrder,
+//     },
+//   });
+
+//   // Här ska man redirectas till orderconfirmation
+//   // res.redirect('http://localhost:8000/api/user/ordered/');
 // });
 
 exports.getOrderHistory = catchAsync(async (req, res, next) => {

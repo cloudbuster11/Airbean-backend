@@ -7,8 +7,8 @@ const { checkUserId } = require('../utils');
 
 router.use(authController.protect);
 
-router.get('/checkout-session/:productId', orderController.getCheckoutSession);
-router.post('/checkout-session/', orderController.createOrderCheckout);
+router.get('/checkout-session/', orderController.getCheckoutSession);
+// router.post('/checkout-session-completed/', orderController.createOrderCheckout);
 
 router.get('/order-history', orderController.getOrderHistory);
 router.get('/orderstatus/:id', orderController.getOrderStatus);

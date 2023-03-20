@@ -24,7 +24,7 @@ router.patch(
 );
 router.delete('/deleteme', userController.deleteMe);
 
-router.post('/order', userController.createOrder);
+// router.post('/order', userController.createOrder);
 
 // Endast admin kommer åt routes nedan.
 router.use(authController.restrictTo('admin'));
