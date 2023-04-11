@@ -24,7 +24,6 @@ This Airbean API was created for learning purposes using different "often used" 
 - Routes
 - Controllers
 - Models
-- Middleware
 - Utils
 
 ### Start Application
@@ -63,80 +62,565 @@ Mongodb connection URI:
 
 ### Open Routes
 
-- GET Menu - /api/menu/
+- GET All Products - /api/product/
 
-- POST Sign up - /api/sign/signup
+- POST Sign up - api/user/signup
 
-  - Body:
-    {
-    "username": "username",
-    "email": "user@gmail.com",
-    "password": "password",
-    "roles": ["user", "admin"]
-    }
+- Body:
 
-- POST Sign in - /api/sign/signin
+>      {
+>      "username": "username",
+>      "password": "password",
+>      "passwordConfirm": "password",
+>      }
 
-  - Body:
-    {
-    "username": "username",
-    "password": "password"
-    }
+- Response:
 
-    - Returns secretToken
+>     {
+>     "status": "success",
+>     "token": "token",
+>     "data": {
+>     "user": {
+>     "username": "username",
+>     "id": "objectId",
+>     }
+>     }
+>     }
 
-  ## User Routes
+>     Cookie => Token
 
-  #### Include Header Authorization Bearer Token in following routes!
+- POST Sign in - /api/user/login
 
-- POST Order as Signed in - /api/auth/user/order
+- Body:
 
-  - Body:
-    {
-    "details": {
-    "order": [
-    {
-    "name": "Bryggkaffe",
-    "price": 29
-    },
-    {
-    "name": "Kaffe Latte",
-    "price": 54
-    }
-    ]
-    }
-    }
+>     {
+>     "username": "username",
+>     "password": "password"
+>     }
 
-- GET Order history - /api/auth/user/orderhistory
+- Response:
 
-- GET Orderstatus - /api/auth/user/orderstatus/:id
+>     {
+>     "status": "success",
+>     "token": "token",
+>     "data": {
+>     "user": {
+>     "username": "username",
+>     "id": "objectId",
+>     }
+>     }
+>     }
 
-  ## Admin Routes
+>     Cookie => Token
 
-  #### Include Header Authorization Bearer Token in following routes!
+## Signed In as User Routes
 
-- GET All orders - /api/auth/admin/allorders
+#### Token is stored in a cookie.
 
-  - Paging - ?limit=2&page=2
-  - Sorting - ?sort=-userId
-  - Fields - ?fields=userId
+##### Token is validated in each request
 
-- GET Menu - /api/auth/admin/menu \*Will be deleted.
+- Get Signout - /api/users/logut
 
-- POST Add product to menu - /api/auth/admin/menu
+- Response:
 
-  - Body:
-    {
-    "title": "Espresso",
-    "desc": "En enkel espresso.",
-    "price": 43
-    }
+>     Returns a cookie with token value "loggedout".
 
-- PATCH Patch Product - /api/auth/admin/menu/:id
+- Post Forgot password - /api/users/forgotpassword
 
-  - Body:
-    {
-    "title": "En Fluffig Semla"
-    }
+- Body
 
-- DELETE Delete product from menu - /api/auth/admin/menu/:id
+>     {
+>     "email": "email",
+>     }
+
+- Response:
+
+>     Sends a email to user with a link to reset password form.
+
+- Patch Reset password - /api/users/resetpassword/:token
+
+- Body
+
+>     {
+>     "passoword": "password",
+>     "passowordConfirm": "password",
+>     }
+
+- Response:
+
+>     Same as Sign in/Sign Up
+
+- Patch Update password - /api/users/updatemypassword
+
+- Body
+
+>     {
+>     "passoword": "password",
+>     "passowordConfirm": "password",
+>     }
+
+- Response:
+
+>     Same as Sign in/Sign Up
+
+- Patch Update Me - /api/users/updateme
+
+- Body
+
+>     {
+>     "name": "newname",
+>     }
+
+- Response:
+
+>     status: 'success',
+>     data: {
+>     user: updatedUser,
+>     }
+
+- Post Create checkout-session - /api/orders/checkout-session
+
+- Body
+
+>     [{
+>     "_id": "objectId",
+>     "quantity": 2
+>     },
+>     {
+>     "_id": "ObjectId",
+>     "quantity": 1
+>     }
+>     ]
+
+- Response:
+
+>     {
+>     "status": "success",
+>     "data": {
+>     "order": {
+>     "id": "ObjectId",
+>     "finishedAt": "createdAt + random x minutes",
+>     "eta": Number,
+>     "totalPrice": totalProductPrice + totalProductPrice,
+>     "createdAt": "Date",
+>     "products": [
+>     {
+>     "_id": "ObjectId",
+>     "title": "title",
+>     "price": xx,
+>     "quantity": 2,
+>     "totalProductPrice": price x quantity
+>     },
+>     {
+>     "_id": "ObjectId",
+>     "title": "title",
+>     "price": xx,
+>     "quantity": 1,
+>     "totalProductPrice": price x quantity
+>     }
+>     ],
+>     }
+>     }
+>     }
+
+- GET Get Order Status - /api/orders/orderstatus/:id
+
+- Response
+
+>     {
+>     "status": "success",
+>     "data": {
+>     "updatedEta": Number
+>     }
+>     }
+
+- GET Order history - /api/orders/order-history
+
+- Response
+
+>     {
+>     "status": "success",
+>     "results": 1,
+>     "data": {
+>     "allDocs": [
+>     {
+>     "id": "642130807c73fd2a86573427",
+>     "products": [
+>     {
+>     "id": "641362674261f5c1fb2ef349",
+>     "title": "Brygg kaffe",
+>     "price": 39,
+>     "quantity": 1,
+>     "totalProductPrice": 39
+>     },
+>     {
+>     "id": "64142c06868b66b7c6fa97ca",
+>     "title": "Klassisk kanelsnäcka",
+>     "price": 29,
+>     "quantity": 1,
+>     "totalProductPrice": 29
+>     }
+>     ],
+>     "user": {
+>     "id": "6412e4aadf3816c8eac75e2e",
+>      "username": "emmy",
+>     "id": "6412e4aadf3816c8eac75e2e"
+>     },
+>     "paymentId": "id",
+>     "totalPrice": 68,
+>     "paid": true,
+>     "eta": 19,
+>     "createdAt": "2023-03-27T05:58:24.046Z",
+>     "updatedAt": "2023-03-27T05:58:24.046Z",
+>     },
+>     ]
+>     }
+>     }
+
+- GET User Data - /api/user/me
+
+- Response
+
+>      {
+>     "_id":  "id",
+>     "name":  "name",
+>     "username":  "username",
+>     "email":  "email",
+>     "role":  "user",
+>     "photo":  "userimg.jpeg",
+>     "passwordChangedAt":  "time",
+>     "reviews":  [
+>     {
+>     "_id":  "641da1b64031259eebb2b0dc",
+>     "review":  "Starkt kaffe!",
+>     "rating":  5,
+>     "createdAt":  "time",
+>     "user":  {
+>     "_id":  "id",
+>     "name":  "username",
+>     },
+>     "product":  {
+>     "_id":  "641362a54261f5c1fb2ef34f",
+>     "title":  "Enkel Espresso"
+>     },
+>     },
+>     ],
+>     }
+
+- Post Create a review - /api/reviews
+
+- Body
+
+>     {
+>     "review": "Helt okej kanelsnäcka",
+>     "rating": 3,
+>     "product": "productId"
+>     }
+
+- Response:
+
+>     {
+>     "status": "success",
+>     "data": {
+>     "review": "Helt okej kanelsnäcka",
+>     "rating": 3,
+>     "createdAt": "date",
+>     "user": "userId",
+>     "product": "productId",
+>     }
+>     }
+
+- Delete Delete a review - /api/reviews/id
+
+- Response:
+
+>     {
+>     "status": "success",
+>     }
+
+- Delete Deactive Me - /api/deleteme
+
+- Response:
+
+>     {
+>     "status": "success",
+>     }
+
+## Admin Routes
+
+#### Token is stored in a cookie.
+
+##### Token is validated in each request
+
+- GET All orders - /api/orders
+
+- Response:
+
+>     {
+>     "status": "success",
+>     "results": 1,
+>     "data": {
+>     "allDocs": [
+>     {
+>     "id": "642130807c73fd2a86573427",
+>     "products": [
+>     {
+>     "id": "641362674261f5c1fb2ef349",
+>     "title": "Brygg kaffe",
+>     "price": 39,
+>     "quantity": 1,
+>     "totalProductPrice": 39
+>     },
+>     {
+>     "id": "64142c06868b66b7c6fa97ca",
+>     "title": "Klassisk kanelsnäcka",
+>     "price": 29,
+>     "quantity": 1,
+>     "totalProductPrice": 29
+>     }
+>     ],
+>     "user": {
+>     "id": "6412e4aadf3816c8eac75e2e",
+>      "username": "emmy",
+>     "id": "6412e4aadf3816c8eac75e2e"
+>     },
+>     "paymentId": "id",
+>     "totalPrice": 68,
+>     "paid": true,
+>     "eta": 19,
+>     "createdAt": "2023-03-27T05:58:24.046Z",
+>     "updatedAt": "2023-03-27T05:58:24.046Z",
+>     },
+>     ]
+>     }
+>     }
+
+- DELETE Delete order - /api/orders/id
+
+- Response:
+
+>     {
+>     status: "success",
+>     }
+
+- POST Add product to menu - /api/product/
+
+- Body:
+
+>     {
+>     "title": "Espresso",
+>     "desc": "En enkel espresso.",
+>     "price": 43
+>     }
+
+- Response:
+
+>     {
+>     "status": "success",
+>     "data": {
+>     "title": "En enkel espresso.",
+>     "desc": "En enkel espresso.",
+>     "price": 43,
+>     "ratingsAverage": 4,
+>     "ratingsQuantity": 0,
+>     "_id": "objectid",
+>     }
+>     }
+
+- PATCH Patch Product - /api/product/:id
+
+- Body:
+
+>     {
+>     "title": "En Fluffig Semla"
+>     }
+
+- Response:
+
+>     {
+>     "status": "success",
+>     "data": {
+>     "title": "newtitle",
+>     "_id": "objectid",
+>     }
+>     }
+
+- DELETE Delete product - /api/product/id
+
+- Response:
+
+>     {
+>     status: "success",
+>     }
+
+- GET Get all user - /api/users
+
+- Response - GET Get All users - /api/user
+
+- Response:
+
+>     {
+>     "status": "success",
+>     "results": 1,
+>     "data": {
+>     "allDocs": [
+>     {
+>     "\_id": "userid",
+>     "name": "name",
+>     "username": "username",
+>     "email": "email",
+>     "role": "admin",
+>     "passwordChangedAt": "date",
+>     "photo": "userimg.jpeg",
+>     "reviews": [],
+>     },
+>     ]
+>     }
+>     }
+
+- DELETE Delete user - /api/user/id
+
+- Response:
+
+>     {
+>     status: "success",
+>     }
+
+- Patch Update user - /api/user/id
+
+- Body
+
+>     {
+>     "role": "admin",
+>     }
+
+- Response:
+
+>     status: 'success',
+>     data: {
+>     user: updatedUser,
+>     }
+
+- GET Get Top rated products - /api/product/top-5-products
+
+- Response:
+
+>     {
+>     "status": "success",
+>     "results": 5,
+>     "data": {
+>     "allDocs": [
+>     {
+>     "\_id": "641362a54261f5c1fb2ef34f",
+>     "title": "Enkel Espresso",
+>     "price": 45,
+>     "ratingsAverage": 5,
+>     "reviews": [
+>     {
+>     "_id": "641da1b64031259eebb2b0dc",
+>     "review": "Starkt kaffe!",
+>     "rating": 5,
+>     "createdAt": "2023-03-24T13:11:06.019Z",
+>     "user": {
+>     "_id": "6412e4aadf3816c8eac75e2e",
+>     "name": "Emmy Trulsson",
+>     "id": "6412e4aadf3816c8eac75e2e"
+>     },
+>     "product": {
+>     "_id": "641362a54261f5c1fb2ef34f",
+>     "title": "Enkel Espresso"
+>     },
+>     }]}]}}
+
+- GET Get Most Sold products - /api/product/most-sold-products
+
+- Response:
+
+>     {
+>     "status": "success",
+>     "data": {
+>     "stats": [
+>     {
+>     "_id": "641362674261f5c1fb2ef349",
+>     "title": "Brygg kaffe",
+>     "totalSold": 24
+>     },
+>     {
+>     "_id": "641362af4261f5c1fb2ef352",
+>     "title": "Dubbel Espresso",
+>     "totalSold": 15
+>     },
+>     {
+>     "_id": "641362854261f5c1fb2ef34c",
+>     "title": "Kaffe Latté",
+>     "totalSold": 13
+>     }
+>     ]
+>     }
+>     }
+
+- GET Get Income - /api/orders/total-income
+
+- Response:
+
+>     {
+>     "status": "success",
+>     "data": [
+>     {
+>     "totalIncome": [
+>     {
+>     "total": 19613
+>     }
+>     ]
+>     },
+>     {
+>     "monthlyIncome": [
+>     {
+>     "_id": 1,
+>     "monthTotal": 114
+>     },
+>     {
+>     "_id": 3,
+>     "monthTotal": 4420
+>     },
+>     {
+>     "_id": 4,
+>     "monthTotal": 15079
+>     }
+>     ]
+>     }
+>     ]
+>     }
+
+- GET Get Income - /api/orders/total-income
+
+- Response:
+
+>     {
+>     "status": "success",
+>     "data": [
+>     {
+>     "totalIncome": [
+>     {
+>     "total": 19613
+>     }
+>     ]
+>     },
+>     {
+>     "monthlyIncome": [
+>     {
+>     "_id": 1,
+>     "monthTotal": 114
+>     },
+>     {
+>     "_id": 3,
+>     "monthTotal": 4420
+>     },
+>     {
+>     "_id": 4,
+>     "monthTotal": 15079
+>     }
+>     ]
+>     }
+>     ]
+>     }
