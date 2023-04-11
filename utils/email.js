@@ -54,11 +54,11 @@ module.exports = class Email {
   // Transport
 
   async sendWelcome() {
-    // this  efter dom defingeras på det akutelle objektet.
-    await this.send('welcome', 'Welcome to AirBean!');
+    // this  efter dom defineras på det akutella objektet.
+    await this.send('welcome', 'Välkommen till AirBean!');
   }
   async sendPasswordReset() {
-    // this  efter dom defingeras på det akutelle objektet.
-    await this.send('passwordReset', 'Password Reset(Valid for 10 minutes)');
+    // this  efter dom defineras på det akutella objektet.
+    await this.send('passwordReset', 'Lösenordåterställning, giltigt i 10 minuter.');
   }
 };

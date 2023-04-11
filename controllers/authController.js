@@ -13,16 +13,15 @@ const signToken = (id) => {
 
 const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
-  const cookieOptions = {
+
+  res.cookie('jwt', token, {
     expires: new Date(Date.now() + process.env.TOKEN_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
     httpOnly: true,
-  };
-
-  // if (req.secure) cookieOptions.secure = true; //https
-  // if (req.secure || req.headers('x-forwarded-prot') === 'https') cookieOptions.secure = true; //https
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true; //https
-
-  res.cookie('jwt', token, cookieOptions);
+    // secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+    secure: true,
+    // Ändras när deployed
+    sameSite: 'none',
+  });
 
   // Remove password from output
   user.password = undefined;
@@ -35,8 +34,6 @@ const createSendToken = (user, statusCode, req, res) => {
     },
   });
 };
-
-// För att använda validator i modellen måste man använda save()
 
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
@@ -59,12 +56,12 @@ exports.signup = catchAsync(async (req, res, next) => {
 exports.login = catchAsync(async (req, res, next) => {
   const { username, password } = req.body;
 
-  // 1 Kolla om lösenord och username finns med i bodyn.
+  // Kolla om lösenord och username finns med i bodyn.
   if (!username || !password) {
     return next(new AppError('Please provide username and password.', 400));
   }
 
-  // 2 Kolla om användare finns och lösenordet är korrekt. "+" väljer ett fält som select false i modellen.
+  // Kolla om användare finns och lösenordet är korrekt. "+" väljer ett fält som select false i modellen.
   const user = await User.findOne({ username }).select('+password');
 
   if (!user || !(await user.correctPassword(password, user.password))) {
@@ -75,13 +72,24 @@ exports.login = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, req, res);
 });
 
-// Protect middleware. Flyttas till middleware.
+exports.logout = (req, res) => {
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now() + process.env.TOKEN_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
+    httpOnly: true,
+    // secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+    secure: true,
+    // Ändras när deployed
+    sameSite: 'none',
+  });
+  res.status(200).json({ status: 'success' });
+};
 
 exports.protect = catchAsync(async (req, res, next) => {
-  // Hämta token och kolla om det finns.
   let token;
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.replace('Bearer', '').replace(' ', '');
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
 
   if (!token) {
@@ -90,6 +98,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // Validera token.
   const decoded = await promisify(jwt.verify)(token, process.env.SECRET);
+  if (!decoded) console.log('fadsf');
 
   // Kolla om användaren fortfarande finns.
   const freshUser = await User.findById(decoded.id);
@@ -102,6 +111,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   // req.user är lika med inloggad användare i Next()
+
   req.user = freshUser;
   // Nu får användare access till protected route.
   next();
@@ -131,7 +141,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   // Skicka det till userns email
   try {
-    const resetURL = `${req.protocol}://${req.get('host')}/api/auth/user/resetpassword/${resetToken}`;
+    const resetURL = `${req.protocol}://${req.get('host')}/#/userform?reset_token=${resetToken}`;
     await new Email(user, resetURL).sendPasswordReset();
     res.status(200).json({
       status: 'success',

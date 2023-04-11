@@ -12,6 +12,7 @@ const handleDuplicateFieldsDB = (err) => {
   const message = `Duplicate field value: ${value}. Please use another value!`;
   return new AppError(message, 400);
 };
+
 const handleValidationErrorDB = (err) => {
   const errors = Object.values(err.errors).map((el) => el.message);
 
@@ -19,10 +20,10 @@ const handleValidationErrorDB = (err) => {
   return new AppError(message, 400);
 };
 
-const handleJWTError = (err) => new AppError('Invalid token. Please log in again.', 401);
+const handleJWTError = () => new AppError('Invalid token. Please log in again.', 401);
 const handleJWTExpired = () => new AppError('Token has expired. Please log in again.', 401);
 
-const sendErrorDev = (err, res) => {
+const sendErrorDev = (err, req, res) => {
   res.status(err.statusCode).json({
     status: err.status,
     error: err,
@@ -31,8 +32,8 @@ const sendErrorDev = (err, res) => {
   });
 };
 
-const sendErrorProd = (err, res) => {
-  // Operational, trusted error: send message to client
+const sendErrorProd = (err, req, res) => {
+  // Operational, trusted error: Skicka meddelande till klienten.
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,
@@ -41,7 +42,7 @@ const sendErrorProd = (err, res) => {
 
     // Bugg eller okänt fel skickar standardmeddelande.
   } else {
-    // 1) Log error
+    // Log error
     console.error('ERROR', err);
     res.status(500).json({
       status: 'error',
@@ -55,7 +56,7 @@ module.exports = (err, req, res, next) => {
   err.status = err.status || 'error';
 
   if (process.env.NODE_ENV === 'development') {
-    sendErrorDev(err, res);
+    sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
     let error = Object.create(err);
 
@@ -65,6 +66,6 @@ module.exports = (err, req, res, next) => {
     if (error.name === 'JsonWebTokenError') error = handleJWTError();
     if (error.name === 'TokenExpiredError') error = handleJWTExpired();
 
-    sendErrorProd(error, res);
+    sendErrorProd(error, req, res);
   }
 };

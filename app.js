@@ -6,7 +6,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const rateLimit = require('express-rate-limit');
-const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const { AppError } = require('./utils');
 const globalErrorHandler = require('./controllers/errorController');
@@ -27,20 +27,29 @@ const limiter = rateLimit({
 app.enable('trust proxy');
 
 // Globala Middleware
-app.use(cors());
 
-app.options('*', cors());
+app.use(
+  cors({
+    // origin: 'https://www.airbean.joakimtrulsson.se',
+    origin: 'http://localhost:8001',
+    credentials: true,
+  })
+);
+// app.use(cors());
+// app.options('*', cors());
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 app.use(helmet());
 
+app.use('/api', limiter);
+
 app.post('/webhook-checkout', express.raw({ type: 'application/json' }), orderController.webhookCheckout);
 
-app.use('/api', limiter);
-app.use(express.json({ limit: '10kb' }));
-app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+app.use(express.json({ limit: '5mb' }));
+app.use(express.urlencoded({ extended: true, limit: '5mb' }));
+app.use(cookieParser());
 
 // Data sanitering mot NoSql injection. logIn {"email": "$gt": ""}
 app.use(mongoSanitize());
@@ -51,7 +60,7 @@ app.use(xss());
 // Förhindrar param pollution.
 app.use(
   hpp({
-    whitelist: ['price', 'ratingsAverage', 'userId', 'createdAt'],
+    whitelist: ['price', 'ratingsAverage', 'userId', 'createdAt', 'ratingsQuantity'],
   })
 );
 

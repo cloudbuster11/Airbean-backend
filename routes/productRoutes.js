@@ -5,13 +5,14 @@ const authController = require('../controllers/authController');
 
 const router = express.Router();
 
-// Skickar vidare till reviewRouter Matchar ###
 router.use('/:productId/reviews', reviewRouter);
 
 router
   .route('/')
   .get(productController.getAllProducts)
   .post(authController.protect, authController.restrictTo('admin'), productController.createProduct);
+
+router.route('/top-5-products').get(productController.aliasTopProducts, productController.getAllProducts);
 
 router
   .route('/:id')

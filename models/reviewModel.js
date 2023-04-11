@@ -44,6 +44,11 @@ reviewSchema.pre(/^find/, function (next) {
     select: 'name',
   });
 
+  this.populate({
+    path: 'product',
+    select: 'title',
+  });
+
   next();
 });
 

@@ -11,11 +11,6 @@ process.on('uncaughtException', (err) => {
 
 const app = require('./app');
 
-// const utils = require('./utils');
-// const connectToDb = utils.connectToDb;
-
-// connectToDb();
-
 const { DATABASE_USER, DATABASE_PASSWORD, DATABASE_SERVER, DATABASE_CONNECTION } = process.env;
 
 const DB_URL = `${DATABASE_CONNECTION}${DATABASE_USER}:${DATABASE_PASSWORD}${DATABASE_SERVER}`;
@@ -33,6 +28,7 @@ mongoose
   });
 
 const port = process.env.PORT || 3000;
+
 const server = app.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });

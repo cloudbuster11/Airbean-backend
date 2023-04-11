@@ -35,13 +35,14 @@ exports.getAll = (Model, populateStr) =>
       status: 'success',
       results: allDocs.length,
       data: {
-        data: allDocs,
+        allDocs,
       },
     });
   });
 
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
+    console.log(req.body);
     const newDoc = await Model.create(req.body);
 
     res.status(201).json({ status: 'success', data: newDoc });
@@ -73,8 +74,8 @@ exports.deleteOne = (Model) =>
     if (!deletedDoc) {
       return next(new AppError('No document found with that id.', 404));
     }
-    res.status(204).json({
+    res.status(200).json({
       status: 'success',
-      message: null,
+      message: 'Document deleted',
     });
   });

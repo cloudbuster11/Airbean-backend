@@ -3,17 +3,18 @@ const router = express.Router();
 
 const authController = require('../controllers/authController');
 const orderController = require('../controllers/orderController');
-const { checkUserId } = require('../utils');
 
 router.use(authController.protect);
 
-router.get('/checkout-session/', orderController.getCheckoutSession);
-// router.post('/checkout-session-completed/', orderController.createOrderCheckout);
+router.post('/checkout-session/', orderController.getCheckoutSession);
 
 router.get('/order-history', orderController.getOrderHistory);
 router.get('/orderstatus/:id', orderController.getOrderStatus);
 
 router.use(authController.restrictTo('admin'));
+
+router.route('/total-income').get(orderController.getSalesDetails);
+router.route('/most-sold-products').get(orderController.getMostSold);
 
 router.route('/').get(orderController.getAllOrders);
 

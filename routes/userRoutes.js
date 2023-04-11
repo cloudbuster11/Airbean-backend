@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
+router.get('/logout', authController.logout);
 
 router.post('/forgotpassword', authController.forgotPassword);
 router.patch('/resetpassword/:token', authController.resetPassword);
@@ -24,9 +25,6 @@ router.patch(
 );
 router.delete('/deleteme', userController.deleteMe);
 
-// router.post('/order', userController.createOrder);
-
-// Endast admin kommer åt routes nedan.
 router.use(authController.restrictTo('admin'));
 
 router.route('/').get(userController.getAllUsers).post(userController.createUser);
