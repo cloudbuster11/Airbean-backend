@@ -64,6 +64,82 @@ Mongodb connection URI:
 
 - **GET: All Products - /api/product/**
 
+- Response:
+
+```
+>      {
+>      "status": "success",
+>      "results": 2,
+>      "data": {
+>      "allDocs": [
+>      {
+>      "id": "productId",
+>      "title": "Macbook Pro",
+>      "desc": "Macbook Pro med inbyggd mugghållare.",
+>      "price": 3999,
+>      "ratingsAverage": 5,
+>      "ratingsQuantity": 2,
+>      "reviews": [
+>      {
+>      "id": "id",
+>      "review": "text?",
+>      "rating": 5,
+>      "createdAt": "date",
+>      "user": {
+>      "name": "Emmy Trulsson",
+>      "id": "userId"
+>      },
+>      "product": {
+>      "id": "productId",
+>      "title": "Macbook Pro med inbyggd mugghållare."
+>      },
+>      },
+>      {
+>      "id": "id",
+>      "review": "text.",
+>      "createdAt": "date",
+>      "rating": 5,
+>      "user": {
+>      "id": "userId",
+>      "name": "userName",
+>      },
+>      "product": {
+>      "id": "productId",
+>      "title": "Macbook Pro med inbyggd mugghållare."
+>      },
+>      }
+>      ]
+>      },
+>      {
+>      "id": "productId",
+>      "title": "Brygg kaffe",
+>      "desc": "En helt vanlig kaffe.",
+>      "price": 39,
+>      "ratingsAverage": 5,
+>      "ratingsQuantity": 1,
+>      "reviews": [
+>      {
+>      "id": "id",
+>      "review": "text",
+>      "rating": 5,
+>      "createdAt": "date",
+>      "user": {
+>      "id": "userId",
+>      "name": "userName",
+>      },
+>      "product": {
+>      "id": "productId",
+>      "title": "Brygg kaffe"
+>      },
+>      }
+>      ]
+>      },
+>      ]
+>      }
+>      }
+>
+```
+
 - **POST: Sign up - api/user/signup**
 
 - Body:
@@ -125,7 +201,7 @@ Mongodb connection URI:
 
 >     Returns a cookie with token value "loggedout".
 
-- **Post: Forgot password - /api/users/forgotpassword**
+- **POST: Forgot password - /api/users/forgotpassword**
 
 - Body
 
