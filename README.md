@@ -1,4 +1,4 @@
-# Airbean API Documentation (Documentation is not up to date with code!)
+# Airbean API Documentation
 
 This Airbean API was created for learning purposes using different "often used" technologies for example:
 
