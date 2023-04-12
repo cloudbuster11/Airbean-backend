@@ -34,14 +34,26 @@ This Airbean API was created for learning purposes using different "often used" 
 
 **Create .env file in root folder with following variables :**
 
-- `NODE_ENV`=development
-- `PORT`
-- `DATABASE_CONNECTION`
-- `DATABASE_USER`
-- `DATABASE_PASSWORD`
-- `DATABASE_SERVER`
+- `NODE_ENV`=production
+- `PORT`=8000
+- `DATABASE_CONNECTION`=
+- `DATABASE_SERVER`=
+- `DATABASE_USER`=
+- `DATABASE_PASSWORD`=
+- `JWTEXPIRATION`=
 - `SECRET`=JWTSECRET
-- `JWTEXPIRATION`
+- `TOKEN_COOKIE_EXPIRES_IN`=
+- `EMAIL_USERNAME`=
+- `EMAIL_PASSWORD`=
+- `EMAIL_HOST`=
+- `EMAIL_PORT`=
+- `EMAIL_FROM`=
+- `EMAIL_USERNAME_DEV`=
+- `EMAIL_PASSWORD_DEV`=
+- `EMAIL_HOST_DEV`=
+- `EMAIL_PORT_DEV`=
+- `STRIPE_SECRET_KEY`=
+- `STRIPE_WEBHOOK_SECRET`=
 
 **_Example :_**
 
