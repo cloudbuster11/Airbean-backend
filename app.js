@@ -1,46 +1,84 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const app = express();
-const { limiters } = require('./middleware');
+const hpp = require('hpp');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
+const rateLimit = require('express-rate-limit');
+const cookieParser = require('cookie-parser');
 
-const menuRouter = require('./routes/menuRoutes');
-const guestRouter = require('./routes/guestRoutes');
-const signRouter = require('./routes/signRoutes');
-const adminRouter = require('./routes/adminRoutes');
+const { AppError } = require('./utils');
+const globalErrorHandler = require('./controllers/errorController');
+const productRouter = require('./routes/productRoutes');
 const userRouter = require('./routes/userRoutes');
+const orderRouter = require('./routes/orderRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
+const orderController = require('./controllers/orderController');
 
-const corsOptions = {
-  origin: 'http://localhost:8000',
-};
+const app = express();
 
-// 1) Middleware
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many request from this IP. Please try again in a hour.',
+});
 
-app.use(cors(corsOptions));
+app.enable('trust proxy');
+
+// Globala Middleware
+
+app.use(
+  cors({
+    // origin: 'https://www.airbean.joakimtrulsson.se',
+    origin: 'http://localhost:8001',
+    credentials: true,
+  })
+);
+// app.use(cors());
+// app.options('*', cors());
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
-app.use(limiters.apiLimiter);
+app.use(helmet());
 
-app.use(express.json());
+app.use('/api', limiter);
 
-app.use(express.urlencoded({ extended: true }));
+app.post('/webhook-checkout', express.raw({ type: 'application/json' }), orderController.webhookCheckout);
 
-app.use((req, res, next) => {
-  console.log('Hello from the middleware 🥸!');
-  next();
-});
+app.use(express.json({ limit: '5mb' }));
+app.use(express.urlencoded({ extended: true, limit: '5mb' }));
+app.use(cookieParser());
+
+// Data sanitering mot NoSql injection. logIn {"email": "$gt": ""}
+app.use(mongoSanitize());
+
+// Data sanitering mot XSS. Förhindrar skadlig kod från att injeceras. Även validators i modells gör dettta.
+app.use(xss());
+
+// Förhindrar param pollution.
+app.use(
+  hpp({
+    whitelist: ['price', 'ratingsAverage', 'userId', 'createdAt', 'ratingsQuantity'],
+  })
+);
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
 
-app.use('/api/menu', limiters.apiLimiter, menuRouter);
-app.use('/api/guest', limiters.apiLimiter, guestRouter);
-app.use('/api/sign', signRouter);
-app.use('/api/auth/admin', limiters.apiLimiter, adminRouter);
-app.use('/api/auth/user', userRouter);
+// Routes
+app.use('/api/product', productRouter);
+app.use('/api/user', userRouter);
+app.use('/api/reviews', reviewRouter);
+app.use('/api/orders', orderRouter);
+
+app.all('*', (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
+app.use(globalErrorHandler);
 
 module.exports = app;

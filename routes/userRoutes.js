@@ -1,23 +1,38 @@
 const express = require('express');
-const { authJwt, limiters } = require('../middleware');
 
-const userCreateOrderController = require('../controllers/userCreateOrderController');
-const userOrdersController = require('../controllers/userOrdersController');
+const authController = require('../controllers/authController');
+const userController = require('../controllers/userController');
 
 const router = express.Router();
 
-router.post('/order', [limiters.apiLimiter, authJwt.verifyToken], userCreateOrderController.createOrder);
+router.post('/signup', authController.signup);
+router.post('/login', authController.login);
+router.get('/logout', authController.logout);
 
-router.get(
-  '/orderhistory',
-  [limiters.apiLimiter, authJwt.verifyToken],
-  userOrdersController.getAllUserOrders
-);
+router.post('/forgotpassword', authController.forgotPassword);
+router.patch('/resetpassword/:token', authController.resetPassword);
 
-router.get(
-  '/orderstatus/:id',
-  [limiters.apiLimiter, authJwt.verifyToken],
-  userOrdersController.getOrderStatus
+router.use(authController.protect);
+
+router.patch('/updatemypassword', authController.updatePassword);
+
+router.get('/me', userController.getMe, userController.getUser);
+router.patch(
+  '/updateme',
+  userController.uploadUserPhoto,
+  userController.resizeUserPhoto,
+  userController.updateMe
 );
+router.delete('/deleteme', userController.deleteMe);
+
+router.use(authController.restrictTo('admin'));
+
+router.route('/').get(userController.getAllUsers).post(userController.createUser);
+
+router
+  .route('/:id')
+  .get(userController.getUser)
+  .patch(userController.updateUser)
+  .delete(userController.deleteUser);
 
 module.exports = router;

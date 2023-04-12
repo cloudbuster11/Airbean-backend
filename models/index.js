@@ -5,12 +5,9 @@ const models = {};
 
 models.mongoose = mongoose;
 
-models.user = require('./userModel');
-models.role = require('./roleModel');
-models.orderUser = require('./orderUserModel');
-models.orderGuest = require('./orderGuestModel');
-models.product = require('./productModel');
-
-models.ROLES = ['user', 'admin'];
+models.User = require('./userModel');
+models.Order = require('./orderModel');
+models.Product = require('./productModel');
+models.Review = require('./reviewModel');
 
 module.exports = models;
