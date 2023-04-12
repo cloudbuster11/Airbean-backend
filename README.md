@@ -62,9 +62,9 @@ Mongodb connection URI:
 
 ### Open Routes
 
-- GET All Products - /api/product/
+- **GET: All Products - /api/product/**
 
-- POST Sign up - api/user/signup
+- **POST: Sign up - api/user/signup**
 
 - Body:
 
@@ -89,7 +89,7 @@ Mongodb connection URI:
 
 >     Cookie => Token
 
-- POST Sign in - /api/user/login
+- **POST: Sign in - /api/user/login**
 
 - Body:
 
@@ -119,13 +119,13 @@ Mongodb connection URI:
 
 ##### Token is validated in each request
 
-- Get Signout - /api/users/logut
+- **GET: Signout - /api/users/logut**
 
 - Response:
 
 >     Returns a cookie with token value "loggedout".
 
-- Post Forgot password - /api/users/forgotpassword
+- **Post: Forgot password - /api/users/forgotpassword**
 
 - Body
 
@@ -137,7 +137,7 @@ Mongodb connection URI:
 
 >     Sends a email to user with a link to reset password form.
 
-- Patch Reset password - /api/users/resetpassword/:token
+- **PATCH: Reset password - /api/users/resetpassword/:token**
 
 - Body
 
@@ -150,7 +150,7 @@ Mongodb connection URI:
 
 >     Same as Sign in/Sign Up
 
-- Patch Update password - /api/users/updatemypassword
+- **PATCH: Update password - /api/users/updatemypassword**
 
 - Body
 
@@ -163,7 +163,7 @@ Mongodb connection URI:
 
 >     Same as Sign in/Sign Up
 
-- Patch Update Me - /api/users/updateme
+- **PATCH: Update Me - /api/users/updateme**
 
 - Body
 
@@ -178,7 +178,7 @@ Mongodb connection URI:
 >     user: updatedUser,
 >     }
 
-- Post Create checkout-session - /api/orders/checkout-session
+- **POST: Create checkout-session - /api/orders/checkout-session**
 
 - Body
 
@@ -223,7 +223,7 @@ Mongodb connection URI:
 >     }
 >     }
 
-- GET Get Order Status - /api/orders/orderstatus/:id
+- **GET: Get Order Status - /api/orders/orderstatus/:id**
 
 - Response
 
@@ -234,7 +234,7 @@ Mongodb connection URI:
 >     }
 >     }
 
-- GET Order history - /api/orders/order-history
+- **GET: Order history - /api/orders/order-history**
 
 - Response
 
@@ -277,7 +277,7 @@ Mongodb connection URI:
 >     }
 >     }
 
-- GET User Data - /api/user/me
+- **GET: User Data - /api/user/me**
 
 - Response
 
@@ -307,7 +307,7 @@ Mongodb connection URI:
 >     ],
 >     }
 
-- Post Create a review - /api/reviews
+- **POST: Create a review - /api/reviews**
 
 - Body
 
@@ -330,7 +330,7 @@ Mongodb connection URI:
 >     }
 >     }
 
-- Delete Delete a review - /api/reviews/id
+- **DELETE: Delete a review - /api/reviews/id**
 
 - Response:
 
@@ -338,7 +338,7 @@ Mongodb connection URI:
 >     "status": "success",
 >     }
 
-- Delete Deactive Me - /api/deleteme
+- **DELETE: Deactive Me - /api/deleteme**
 
 - Response:
 
@@ -350,9 +350,9 @@ Mongodb connection URI:
 
 #### Token is stored in a cookie.
 
-##### Token is validated in each request
+##### Token and role is validated in each request
 
-- GET All orders - /api/orders
+- **GET: All orders - /api/orders**
 
 - Response:
 
@@ -395,7 +395,7 @@ Mongodb connection URI:
 >     }
 >     }
 
-- DELETE Delete order - /api/orders/id
+- **DELETE: Delete order - /api/orders/id**
 
 - Response:
 
@@ -403,7 +403,7 @@ Mongodb connection URI:
 >     status: "success",
 >     }
 
-- POST Add product to menu - /api/product/
+- **POST: Add a product to menu - /api/product/**
 
 - Body:
 
@@ -427,7 +427,7 @@ Mongodb connection URI:
 >     }
 >     }
 
-- PATCH Patch Product - /api/product/:id
+- **PATCH: Update a product - /api/product/:id**
 
 - Body:
 
@@ -445,7 +445,7 @@ Mongodb connection URI:
 >     }
 >     }
 
-- DELETE Delete product - /api/product/id
+- **DELETE: Delete product - /api/product/id**
 
 - Response:
 
@@ -453,7 +453,7 @@ Mongodb connection URI:
 >     status: "success",
 >     }
 
-- GET Get all user - /api/users
+- **GET: Get all users - /api/users**
 
 - Response - GET Get All users - /api/user
 
@@ -478,7 +478,7 @@ Mongodb connection URI:
 >     }
 >     }
 
-- DELETE Delete user - /api/user/id
+- **DELETE: Delete user - /api/user/id**
 
 - Response:
 
@@ -486,7 +486,7 @@ Mongodb connection URI:
 >     status: "success",
 >     }
 
-- Patch Update user - /api/user/id
+- **PATCH: Update user - /api/user/id**
 
 - Body
 
@@ -501,7 +501,7 @@ Mongodb connection URI:
 >     user: updatedUser,
 >     }
 
-- GET Get Top rated products - /api/product/top-5-products
+- **GET: Get top rated products - /api/product/top-5-products**
 
 - Response:
 
@@ -532,7 +532,7 @@ Mongodb connection URI:
 >     },
 >     }]}]}}
 
-- GET Get Most Sold products - /api/product/most-sold-products
+- **GET: Get most sold products - /api/product/most-sold-products**
 
 - Response:
 
@@ -559,40 +559,7 @@ Mongodb connection URI:
 >     }
 >     }
 
-- GET Get Income - /api/orders/total-income
-
-- Response:
-
->     {
->     "status": "success",
->     "data": [
->     {
->     "totalIncome": [
->     {
->     "total": 19613
->     }
->     ]
->     },
->     {
->     "monthlyIncome": [
->     {
->     "_id": 1,
->     "monthTotal": 114
->     },
->     {
->     "_id": 3,
->     "monthTotal": 4420
->     },
->     {
->     "_id": 4,
->     "monthTotal": 15079
->     }
->     ]
->     }
->     ]
->     }
-
-- GET Get Income - /api/orders/total-income
+- **GET: Get sales stats - /api/orders/total-income**
 
 - Response:
 
