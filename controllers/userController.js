@@ -105,3 +105,5 @@ exports.getAllUsers = factory.getAll(User, { path: 'reviews' });
 exports.deleteUser = factory.deleteOne(User);
 // Inte för uppdatering av lösenord!
 exports.updateUser = factory.updateOne(User);
+
+const arra = [];

@@ -67,101 +67,104 @@ Mongodb connection URI:
 - Response:
 
 ```
->      {
->      "status": "success",
->      "results": 2,
->      "data": {
->      "allDocs": [
->      {
->      "id": "productId",
->      "title": "Macbook Pro",
->      "desc": "Macbook Pro med inbyggd mugghållare.",
->      "price": 3999,
->      "ratingsAverage": 5,
->      "ratingsQuantity": 2,
->      "reviews": [
->      {
->      "id": "id",
->      "review": "text?",
->      "rating": 5,
->      "createdAt": "date",
->      "user": {
->      "name": "Emmy Trulsson",
->      "id": "userId"
->      },
->      "product": {
->      "id": "productId",
->      "title": "Macbook Pro med inbyggd mugghållare."
->      },
->      },
->      {
->      "id": "id",
->      "review": "text.",
->      "createdAt": "date",
->      "rating": 5,
->      "user": {
->      "id": "userId",
->      "name": "userName",
->      },
->      "product": {
->      "id": "productId",
->      "title": "Macbook Pro med inbyggd mugghållare."
->      },
->      }
->      ]
->      },
->      {
->      "id": "productId",
->      "title": "Brygg kaffe",
->      "desc": "En helt vanlig kaffe.",
->      "price": 39,
->      "ratingsAverage": 5,
->      "ratingsQuantity": 1,
->      "reviews": [
->      {
->      "id": "id",
->      "review": "text",
->      "rating": 5,
->      "createdAt": "date",
->      "user": {
->      "id": "userId",
->      "name": "userName",
->      },
->      "product": {
->      "id": "productId",
->      "title": "Brygg kaffe"
->      },
->      }
->      ]
->      },
->      ]
->      }
->      }
->
+ {
+    status: 'success',
+    results: 2,
+    data: {
+      allDocs: [
+        {
+          id: 'productId',
+          title: 'Macbook Pro',
+          desc: 'Macbook Pro med inbyggd mugghållare.',
+          price: 3999,
+          ratingsAverage: 5,
+          ratingsQuantity: 2,
+          reviews: [
+            {
+              id: 'id',
+              review: 'text?',
+              rating: 5,
+              createdAt: 'date',
+              user: {
+                name: 'Emmy Trulsson',
+                id: 'userId',
+              },
+              product: {
+                id: 'productId',
+                title: 'Macbook Pro med inbyggd mugghållare.',
+              },
+            },
+            {
+              id: 'id',
+              review: 'text.',
+              createdAt: 'date',
+              rating: 5,
+              user: {
+                id: 'userId',
+                name: 'userName',
+              },
+              product: {
+                id: 'productId',
+                title: 'Macbook Pro med inbyggd mugghållare.',
+              },
+            },
+          ],
+        },
+        {
+          id: 'productId',
+          title: 'Brygg kaffe',
+          desc: 'En helt vanlig kaffe.',
+          price: 39,
+          ratingsAverage: 5,
+          ratingsQuantity: 1,
+          reviews: [
+            {
+              id: 'id',
+              review: 'text',
+              rating: 5,
+              createdAt: 'date',
+              user: {
+                id: 'userId',
+                name: 'userName',
+              },
+              product: {
+                id: 'productId',
+                title: 'Brygg kaffe',
+              },
+            },
+          ],
+        },
+      ],
+    },
+  },
 ```
 
 - **POST: Sign up - api/user/signup**
 
 - Body:
 
->      {
->      "username": "username",
->      "password": "password",
->      "passwordConfirm": "password",
->      }
+```
+  {
+    username: 'username',
+    password: 'password',
+    passwordConfirm: 'password',
+  },
+```
 
 - Response:
 
->     {
->     "status": "success",
->     "token": "token",
->     "data": {
->     "user": {
->     "username": "username",
->     "id": "objectId",
->     }
->     }
->     }
+```
+ {
+    status: 'success',
+    token: 'token',
+    data: {
+      user: {
+        username: 'username',
+        id: 'objectId',
+      },
+    },
+  },
+```
 
 >     Cookie => Token
 
@@ -169,23 +172,29 @@ Mongodb connection URI:
 
 - Body:
 
->     {
->     "username": "username",
->     "password": "password"
->     }
+```
+{
+  {
+    username: 'username',
+    password: 'password',
+  },
+}
+```
 
 - Response:
 
->     {
->     "status": "success",
->     "token": "token",
->     "data": {
->     "user": {
->     "username": "username",
->     "id": "objectId",
->     }
->     }
->     }
+```
+  {
+    status: 'success',
+    token: 'token',
+    data: {
+      user: {
+        username: 'username',
+        id: 'objectId',
+      },
+    },
+  },
+```
 
 >     Cookie => Token
 
@@ -199,228 +208,265 @@ Mongodb connection URI:
 
 - Response:
 
->     Returns a cookie with token value "loggedout".
+```
+Returns a cookie with token value "loggedout".
+```
 
 - **POST: Forgot password - /api/users/forgotpassword**
 
 - Body
 
->     {
->     "email": "email",
->     }
+```
+  {
+    "email": "email",
+  }
+```
 
 - Response:
 
->     Sends a email to user with a link to reset password form.
+```
+  Sends a email to user with a link to reset password form.
+```
 
 - **PATCH: Reset password - /api/users/resetpassword/:token**
 
 - Body
 
->     {
->     "passoword": "password",
->     "passowordConfirm": "password",
->     }
+```
+  {
+    "passoword": "password",
+    "passowordConfirm": "password",
+  }
+```
 
 - Response:
 
->     Same as Sign in/Sign Up
+```
+  Same as Sign in/Sign Up
+```
 
 - **PATCH: Update password - /api/users/updatemypassword**
 
 - Body
 
->     {
->     "passoword": "password",
->     "passowordConfirm": "password",
->     }
+```
+  {
+    passoword: 'password',
+    passowordConfirm: 'password',
+  },
+```
 
 - Response:
 
->     Same as Sign in/Sign Up
+```
+  Same as Sign in/Sign Up
+```
 
 - **PATCH: Update Me - /api/users/updateme**
 
 - Body
 
->     {
->     "name": "newname",
->     }
+```
+  {
+    "name": "newname",
+  }
+```
 
 - Response:
 
->     status: 'success',
->     data: {
->     user: updatedUser,
->     }
+```
+  {
+    status: 'success',
+    data: {
+      user: updatedUser,
+    },
+  },
+```
 
 - **POST: Create checkout-session - /api/orders/checkout-session**
 
 - Body
 
->     [{
->     "_id": "objectId",
->     "quantity": 2
->     },
->     {
->     "_id": "ObjectId",
->     "quantity": 1
->     }
->     ]
+```
+  {
+    _id: 'objectId',
+    quantity: 2,
+  },
+  {
+    _id: 'ObjectId',
+    quantity: 1,
+  },
+```
 
 - Response:
 
->     {
->     "status": "success",
->     "data": {
->     "order": {
->     "id": "ObjectId",
->     "finishedAt": "createdAt + random x minutes",
->     "eta": Number,
->     "totalPrice": totalProductPrice + totalProductPrice,
->     "createdAt": "Date",
->     "products": [
->     {
->     "_id": "ObjectId",
->     "title": "title",
->     "price": xx,
->     "quantity": 2,
->     "totalProductPrice": price x quantity
->     },
->     {
->     "_id": "ObjectId",
->     "title": "title",
->     "price": xx,
->     "quantity": 1,
->     "totalProductPrice": price x quantity
->     }
->     ],
->     }
->     }
->     }
+```
+ {
+    status: 'success',
+    data: {
+      order: {
+        id: 'ObjectId',
+        finishedAt: 'createdAt + random x minutes',
+        eta: Number,
+        totalPrice: 'totalProductPrice + totalProductPrice',
+        createdAt: 'Date',
+        products: [
+          {
+            _id: 'ObjectId',
+            title: 'title',
+            price: xx,
+            quantity: 2,
+            totalProductPrice: 'price x quantity',
+          },
+          {
+            _id: 'ObjectId',
+            title: 'title',
+            price: xx,
+            quantity: 1,
+            totalProductPrice: 'price x quantity',
+          },
+        ],
+      },
+    },
+  },
+```
 
 - **GET: Get Order Status - /api/orders/orderstatus/:id**
 
 - Response
 
->     {
->     "status": "success",
->     "data": {
->     "updatedEta": Number
->     }
->     }
+```
+  {
+    status: 'success',
+    data: {
+      updatedEta: Number,
+    },
+  },
+```
 
 - **GET: Order history - /api/orders/order-history**
 
 - Response
 
->     {
->     "status": "success",
->     "results": 1,
->     "data": {
->     "allDocs": [
->     {
->     "id": "642130807c73fd2a86573427",
->     "products": [
->     {
->     "id": "641362674261f5c1fb2ef349",
->     "title": "Brygg kaffe",
->     "price": 39,
->     "quantity": 1,
->     "totalProductPrice": 39
->     },
->     {
->     "id": "64142c06868b66b7c6fa97ca",
->     "title": "Klassisk kanelsnäcka",
->     "price": 29,
->     "quantity": 1,
->     "totalProductPrice": 29
->     }
->     ],
->     "user": {
->     "id": "6412e4aadf3816c8eac75e2e",
->      "username": "emmy",
->     "id": "6412e4aadf3816c8eac75e2e"
->     },
->     "paymentId": "id",
->     "totalPrice": 68,
->     "paid": true,
->     "eta": 19,
->     "createdAt": "2023-03-27T05:58:24.046Z",
->     "updatedAt": "2023-03-27T05:58:24.046Z",
->     },
->     ]
->     }
->     }
+```
+ {
+    status: 'success',
+    results: 1,
+    data: {
+      allDocs: [
+        {
+          id: '642130807c73fd2a86573427',
+          products: [
+            {
+              id: '641362674261f5c1fb2ef349',
+              title: 'Brygg kaffe',
+              price: 39,
+              quantity: 1,
+              totalProductPrice: 39,
+            },
+            {
+              id: '64142c06868b66b7c6fa97ca',
+              title: 'Klassisk kanelsnäcka',
+              price: 29,
+              quantity: 1,
+              totalProductPrice: 29,
+            },
+          ],
+          user: {
+            id: '6412e4aadf3816c8eac75e2e',
+            username: 'emmy',
+            id: '6412e4aadf3816c8eac75e2e',
+          },
+          paymentId: 'id',
+          totalPrice: 68,
+          paid: true,
+          eta: 19,
+          createdAt: '2023-03-27T05:58:24.046Z',
+          updatedAt: '2023-03-27T05:58:24.046Z',
+        },
+      ],
+    },
+  },
+```
 
 - **GET: User Data - /api/user/me**
 
 - Response
 
->      {
->     "_id":  "id",
->     "name":  "name",
->     "username":  "username",
->     "email":  "email",
->     "role":  "user",
->     "photo":  "userimg.jpeg",
->     "passwordChangedAt":  "time",
->     "reviews":  [
->     {
->     "_id":  "641da1b64031259eebb2b0dc",
->     "review":  "Starkt kaffe!",
->     "rating":  5,
->     "createdAt":  "time",
->     "user":  {
->     "_id":  "id",
->     "name":  "username",
->     },
->     "product":  {
->     "_id":  "641362a54261f5c1fb2ef34f",
->     "title":  "Enkel Espresso"
->     },
->     },
->     ],
->     }
+```
+ {
+    _id: 'id',
+    name: 'name',
+    username: 'username',
+    email: 'email',
+    role: 'user',
+    photo: 'userimg.jpeg',
+    passwordChangedAt: 'time',
+    reviews: [
+      {
+        _id: '641da1b64031259eebb2b0dc',
+        review: 'Starkt kaffe!',
+        rating: 5,
+        createdAt: 'time',
+        user: {
+          _id: 'id',
+          name: 'username',
+        },
+        product: {
+          _id: '641362a54261f5c1fb2ef34f',
+          title: 'Enkel Espresso',
+        },
+      },
+    ],
+  },
+```
 
 - **POST: Create a review - /api/reviews**
 
 - Body
 
->     {
->     "review": "Helt okej kanelsnäcka",
->     "rating": 3,
->     "product": "productId"
->     }
+```
+  {
+    review: 'Helt okej kanelsnäcka',
+    rating: 3,
+    product: 'productId',
+  },
+```
 
 - Response:
 
->     {
->     "status": "success",
->     "data": {
->     "review": "Helt okej kanelsnäcka",
->     "rating": 3,
->     "createdAt": "date",
->     "user": "userId",
->     "product": "productId",
->     }
->     }
+```
+  {
+    status: 'success',
+    data: {
+      review: 'Helt okej kanelsnäcka',
+      rating: 3,
+      createdAt: 'date',
+      user: 'userId',
+      product: 'productId',
+    },
+  },
+```
 
 - **DELETE: Delete a review - /api/reviews/id**
 
 - Response:
 
->     {
->     "status": "success",
->     }
+```
+  {
+    "status": "success",
+  }
+```
 
 - **DELETE: Deactive Me - /api/deleteme**
 
 - Response:
 
->     {
->     "status": "success",
->     }
+```
+  {
+    "status": "success",
+  }
+```
 
 ## Admin Routes
 
@@ -432,238 +478,271 @@ Mongodb connection URI:
 
 - Response:
 
->     {
->     "status": "success",
->     "results": 1,
->     "data": {
->     "allDocs": [
->     {
->     "id": "642130807c73fd2a86573427",
->     "products": [
->     {
->     "id": "641362674261f5c1fb2ef349",
->     "title": "Brygg kaffe",
->     "price": 39,
->     "quantity": 1,
->     "totalProductPrice": 39
->     },
->     {
->     "id": "64142c06868b66b7c6fa97ca",
->     "title": "Klassisk kanelsnäcka",
->     "price": 29,
->     "quantity": 1,
->     "totalProductPrice": 29
->     }
->     ],
->     "user": {
->     "id": "6412e4aadf3816c8eac75e2e",
->      "username": "emmy",
->     "id": "6412e4aadf3816c8eac75e2e"
->     },
->     "paymentId": "id",
->     "totalPrice": 68,
->     "paid": true,
->     "eta": 19,
->     "createdAt": "2023-03-27T05:58:24.046Z",
->     "updatedAt": "2023-03-27T05:58:24.046Z",
->     },
->     ]
->     }
->     }
+```
+ {
+    status: 'success',
+    results: 1,
+    data: {
+      allDocs: [
+        {
+          id: '642130807c73fd2a86573427',
+          products: [
+            {
+              id: '641362674261f5c1fb2ef349',
+              title: 'Brygg kaffe',
+              price: 39,
+              quantity: 1,
+              totalProductPrice: 39,
+            },
+            {
+              id: '64142c06868b66b7c6fa97ca',
+              title: 'Klassisk kanelsnäcka',
+              price: 29,
+              quantity: 1,
+              totalProductPrice: 29,
+            },
+          ],
+          user: {
+            id: '6412e4aadf3816c8eac75e2e',
+            username: 'emmy',
+            id: '6412e4aadf3816c8eac75e2e',
+          },
+          paymentId: 'id',
+          totalPrice: 68,
+          paid: true,
+          eta: 19,
+          createdAt: '2023-03-27T05:58:24.046Z',
+          updatedAt: '2023-03-27T05:58:24.046Z',
+        },
+      ],
+    },
+  },
+```
 
 - **DELETE: Delete order - /api/orders/id**
 
 - Response:
 
->     {
->     status: "success",
->     }
+```
+  {
+    status: "success",
+  }
+```
 
 - **POST: Add a product to menu - /api/product/**
 
 - Body:
 
->     {
->     "title": "Espresso",
->     "desc": "En enkel espresso.",
->     "price": 43
->     }
+```
+  {
+    title: 'Espresso',
+    desc: 'En enkel espresso.',
+    price: 43,
+  },
+```
 
 - Response:
 
->     {
->     "status": "success",
->     "data": {
->     "title": "En enkel espresso.",
->     "desc": "En enkel espresso.",
->     "price": 43,
->     "ratingsAverage": 4,
->     "ratingsQuantity": 0,
->     "_id": "objectid",
->     }
->     }
+```
+  {
+    status: 'success',
+    data: {
+      title: 'En enkel espresso.',
+      desc: 'En enkel espresso.',
+      price: 43,
+      ratingsAverage: 4,
+      ratingsQuantity: 0,
+      _id: 'objectid',
+    },
+  },
+```
 
 - **PATCH: Update a product - /api/product/:id**
 
 - Body:
 
->     {
->     "title": "En Fluffig Semla"
->     }
+```
+  {
+    "title": "En Fluffig Semla"
+  }
+```
 
 - Response:
 
->     {
->     "status": "success",
->     "data": {
->     "title": "newtitle",
->     "_id": "objectid",
->     }
->     }
+```
+  {
+    status: 'success',
+    data: {
+      title: 'newtitle',
+      _id: 'objectid',
+    },
+  },
+```
 
 - **DELETE: Delete product - /api/product/id**
 
 - Response:
 
->     {
->     status: "success",
->     }
+```
+  {
+    status: "success",
+  }
+```
 
 - **GET: Get all users - /api/users**
 
-- Response - GET Get All users - /api/user
-
 - Response:
 
->     {
->     "status": "success",
->     "results": 1,
->     "data": {
->     "allDocs": [
->     {
->     "\_id": "userid",
->     "name": "name",
->     "username": "username",
->     "email": "email",
->     "role": "admin",
->     "passwordChangedAt": "date",
->     "photo": "userimg.jpeg",
->     "reviews": [],
->     },
->     ]
->     }
->     }
+```
+{
+    status: 'success',
+    results: 1,
+    data: {
+      allDocs: [
+        {
+          '_id': 'userid',
+          name: 'name',
+          username: 'username',
+          email: 'email',
+          role: 'admin',
+          passwordChangedAt: 'date',
+          photo: 'userimg.jpeg',
+          reviews: [],
+        },
+      ],
+    },
+  },
+```
 
 - **DELETE: Delete user - /api/user/id**
 
 - Response:
 
->     {
->     status: "success",
->     }
+```
+  {
+    status: "success",
+  }
+```
 
 - **PATCH: Update user - /api/user/id**
 
 - Body
 
->     {
->     "role": "admin",
->     }
+```
+  {
+    "role": "admin",
+  }
+```
 
 - Response:
 
->     status: 'success',
->     data: {
->     user: updatedUser,
->     }
+```
+  {
+    status: 'success',
+    data: {
+      user: updatedUser,
+    },
+  },
+```
 
 - **GET: Get top rated products - /api/product/top-5-products**
 
 - Response:
 
->     {
->     "status": "success",
->     "results": 5,
->     "data": {
->     "allDocs": [
->     {
->     "\_id": "641362a54261f5c1fb2ef34f",
->     "title": "Enkel Espresso",
->     "price": 45,
->     "ratingsAverage": 5,
->     "reviews": [
->     {
->     "_id": "641da1b64031259eebb2b0dc",
->     "review": "Starkt kaffe!",
->     "rating": 5,
->     "createdAt": "2023-03-24T13:11:06.019Z",
->     "user": {
->     "_id": "6412e4aadf3816c8eac75e2e",
->     "name": "Emmy Trulsson",
->     "id": "6412e4aadf3816c8eac75e2e"
->     },
->     "product": {
->     "_id": "641362a54261f5c1fb2ef34f",
->     "title": "Enkel Espresso"
->     },
->     }]}]}}
+```
+{
+    status: 'success',
+    results: 5,
+    data: {
+      allDocs: [
+        {
+          '_id': '641362a54261f5c1fb2ef34f',
+          title: 'Enkel Espresso',
+          price: 45,
+          ratingsAverage: 5,
+          reviews: [
+            {
+              _id: '641da1b64031259eebb2b0dc',
+              review: 'Starkt kaffe!',
+              rating: 5,
+              createdAt: '2023-03-24T13:11:06.019Z',
+              user: {
+                _id: '6412e4aadf3816c8eac75e2e',
+                name: 'Emmy Trulsson',
+                id: '6412e4aadf3816c8eac75e2e',
+              },
+              product: {
+                _id: '641362a54261f5c1fb2ef34f',
+                title: 'Enkel Espresso',
+              },
+            },
+          ],
+        },
+      ],
+    },
+  },
+```
 
 - **GET: Get most sold products - /api/product/most-sold-products**
 
 - Response:
 
->     {
->     "status": "success",
->     "data": {
->     "stats": [
->     {
->     "_id": "641362674261f5c1fb2ef349",
->     "title": "Brygg kaffe",
->     "totalSold": 24
->     },
->     {
->     "_id": "641362af4261f5c1fb2ef352",
->     "title": "Dubbel Espresso",
->     "totalSold": 15
->     },
->     {
->     "_id": "641362854261f5c1fb2ef34c",
->     "title": "Kaffe Latté",
->     "totalSold": 13
->     }
->     ]
->     }
->     }
+```
+{
+    status: 'success',
+    data: {
+      stats: [
+        {
+          _id: '641362674261f5c1fb2ef349',
+          title: 'Brygg kaffe',
+          totalSold: 24,
+        },
+        {
+          _id: '641362af4261f5c1fb2ef352',
+          title: 'Dubbel Espresso',
+          totalSold: 15,
+        },
+        {
+          _id: '641362854261f5c1fb2ef34c',
+          title: 'Kaffe Latté',
+          totalSold: 13,
+        },
+      ],
+    },
+  },
+```
 
 - **GET: Get sales stats - /api/orders/total-income**
 
 - Response:
 
->     {
->     "status": "success",
->     "data": [
->     {
->     "totalIncome": [
->     {
->     "total": 19613
->     }
->     ]
->     },
->     {
->     "monthlyIncome": [
->     {
->     "_id": 1,
->     "monthTotal": 114
->     },
->     {
->     "_id": 3,
->     "monthTotal": 4420
->     },
->     {
->     "_id": 4,
->     "monthTotal": 15079
->     }
->     ]
->     }
->     ]
->     }
+```
+  {
+    status: 'success',
+    data: [
+      {
+        totalIncome: [
+          {
+            total: 19613,
+          },
+        ],
+      },
+      {
+        monthlyIncome: [
+          {
+            _id: 1,
+            monthTotal: 114,
+          },
+          {
+            _id: 3,
+            monthTotal: 4420,
+          },
+          {
+            _id: 4,
+            monthTotal: 15079,
+          },
+        ],
+      },
+    ],
+  },
+```
